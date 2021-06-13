@@ -1,0 +1,84 @@
+// The database schema
+datasource db {
+  url      = env("DATABASE_URL")
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Sexuality {
+  Straight
+  Gay_Lesbian
+  Bisexual
+  Pansexual
+  Asexual
+  Other
+}
+
+enum Gender {
+  Male
+  Female
+  Non_Binary
+  Other
+}
+
+enum VerificationState {
+  PreVerify // Joined the server and didn't run !verify yet.
+  Verifying // Currently verifying
+  Denied // Denied, can try again
+  Denied_Permanent // Denied, banned from retrying - trolls 
+}
+
+model User {
+  // The unique id for the user, it differs from the Discord id,
+  // that's `discordId`.
+  id             String       @id @default(cuid())
+  // The username, by default it's the discord username.
+  username       String
+  // The discord id
+  discordId      String       @unique
+  // User Profile, it is nullable as unverified users
+  // do not have a profile yet.
+  profile        Profile?
+  // Verification
+  verification   Verification @relation(fields: [verificationId], references: [id])
+  verificationId String
+
+  @@map("te_users")
+}
+
+model Profile {
+  id        String    @id @default(cuid())
+  // Pronouns - they're in the they/them/their/theirs format,
+  // serialized as [they, them, their, theirs].
+  pronouns  String    @default("they/them/their/theirs")
+  // About
+  about     String?
+  // Sexuality
+  sexuality Sexuality @default(Other)
+  // Gender
+  gender    Gender    @default(Other)
+  // User
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@map("te_user_profile")
+}
+
+model Verification {
+  id        String            @id @default(cuid())
+  // The user being verified.
+  user      User[]
+  // Verification questions, it's a JSON array containing these objects:
+  // { q: "A?", a: "B." }
+  questions Json
+  // Verification State
+  state     VerificationState @default(PreVerify)
+  // Discord Channel Id - required for non-closed verifications,
+  // if the bot were to restart, it needs to re-hook it's listeners.
+  channelId String?
+
+  @@map("te_user_verification")
+}

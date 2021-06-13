@@ -1,0 +1,23 @@
+{
+  "name": "@trans-euphroia/bot",
+  "version": "1.0.0",
+  "description": "Discord bot for the Trans Euphoria server.",
+  "author": {
+    "name": "Mia",
+    "email": "vottus@vott.us"
+  },
+  "homepage": "https://discord.gg/34XvAF25Cs",
+  "dependencies": {
+    "@matherioneu/container": "^1.0.1-2",
+    "@prisma/client": "^2.24.1",
+    "discord.js-light": "^3.5.11",
+    "prisma": "^2.24.1",
+    "slugify": "^1.5.3",
+    "tsconfig-paths": "^3.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^15.12.2",
+    "ts-node": "^10.0.0",
+    "ts-node-dev": "^1.1.6"
+  }
+}
