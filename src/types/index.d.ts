@@ -6,11 +6,13 @@ import {
   TextChannel,
   ClientEvents,
 } from "discord.js";
+import { Logger } from "winston";
 import { EuphoriaClient } from "../discord/client";
 
 export interface Container {
   db: PrismaClient;
   bot: EuphoriaClient;
+  logger: Logger;
 }
 
 export interface CommandContext {

@@ -2,12 +2,13 @@ import { VerificationState } from "@prisma/client";
 import { startVerification } from "../verification/start";
 import { services } from "../../utils/container";
 import { createCommand } from "../constructors";
+import { Env, env } from "../../utils/env";
 
 export default createCommand(
   "verify",
   {
     permissions: {
-      roles: [],
+      roles: [env(Env.ROLE_UNVERIFIED_ID)],
       every: true,
       failMessage: ({ message }) =>
         `${message.author.username}, you are already verified.`,
@@ -16,7 +17,7 @@ export default createCommand(
     rateLimit: 1 * 60 * 1000,
   },
   async ({ message }) => {
-    const { db, bot } = services();
+    const { db } = services();
 
     // TODO: caching
 

@@ -8,6 +8,7 @@
   },
   "homepage": "https://discord.gg/34XvAF25Cs",
   "dependencies": {
+    "@fasteerjs/fasteer": "^3.1.1",
     "@matherioneu/container": "^1.0.1-2",
     "@prisma/client": "^2.24.1",
     "chalk": "^4.1.1",
@@ -15,7 +16,8 @@
     "dotenv": "^10.0.0",
     "prisma": "^2.24.1",
     "slugify": "^1.5.3",
-    "tsconfig-paths": "^3.9.0"
+    "tsconfig-paths": "^3.9.0",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@types/glob": "^7.1.3",

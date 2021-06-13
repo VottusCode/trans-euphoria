@@ -8,6 +8,13 @@ export enum Env {
   CLIENT_ID = "CLIENT_ID",
   DATABASE_URL = "DATABASE_URL",
   BOT_PREFIX = "BOT_PREFIX",
+  ROLE_UNVERIFIED_ID = "ROLE_UNVERIFIED_ID",
+  NODE_ENV = "NODE_ENV",
+}
+
+export enum Environment {
+  DEV = "development",
+  PROD = "production",
 }
 
 export const env = (variable: Env): string => {
@@ -19,3 +26,5 @@ export const env = (variable: Env): string => {
 
   return val;
 };
+
+export const dev = () => env(Env.NODE_ENV) === "development";

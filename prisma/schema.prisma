@@ -1,7 +1,8 @@
 // The database schema
 datasource db {
-  url      = env("DATABASE_URL")
-  provider = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  provider          = "postgresql"
 }
 
 generator client {
@@ -70,10 +71,9 @@ model Profile {
 model Verification {
   id        String            @id @default(cuid())
   // The user being verified.
-  user      User[]
-  // Verification questions, it's a JSON array containing these objects:
-  // { q: "A?", a: "B." }
-  questions Json
+  user      User?
+  // Verification answer
+  answer String?
   // Verification State
   state     VerificationState @default(PreVerify)
   // Discord Channel Id - required for non-closed verifications,

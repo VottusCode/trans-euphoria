@@ -1,29 +1,116 @@
-import { bold, greenBright, yellow } from "chalk";
+import { PrismaClient } from "@prisma/client";
+import { bold, cyanBright, green, greenBright, yellow } from "chalk";
 import { Client } from "discord.js-light";
 import { sync as glob } from "glob";
 import path from "path";
+import { Logger } from "winston";
 import { Command, Event } from "../types";
+import { service, services } from "../utils/container";
 import { Env, env } from "../utils/env";
 import { inviteUrl } from "../utils/invite";
 
+// Event overrides:
+// ready -> euphoriaReady
 export class EuphoriaClient extends Client {
   private commands: Command[] = [];
 
+  public logger: Logger;
+
+  public isReady: boolean;
+
   constructor(private _token: string) {
     super();
+
+    const { logger } = services();
+    this.logger = logger;
   }
 
   public async start() {
     this.on("ready", async () => {
-      console.log(
-        `Bot ready! ${this.user.username}#${this.user.discriminator}`
+      this.logger.info(
+        greenBright(
+          `Logged in as ${bold(
+            `${this.user.username}#${this.user.discriminator}`
+          )}`
+        )
       );
-      console.log(`Invite: ${inviteUrl(env(Env.CLIENT_ID))}`);
+
+      await this.syncUsers();
+      await this.loadCommands();
+      await this.loadEvents();
+
+      this.emit("euphoriaReady");
     });
 
-    await this.loadCommands();
-    await this.loadEvents();
+    this.on("euphoriaReady", async () => {
+      this.isReady = true;
+
+      this.logger.info("");
+      this.logger.info(
+        cyanBright(`Bot ready! Invite: ${bold(inviteUrl(env(Env.CLIENT_ID)))}`)
+      );
+    });
+
     await this.login(this._token);
+  }
+
+  private async syncUsers() {
+    const db = service("db");
+
+    this.logger.info("");
+    this.logger.info("Syncing users, this may take a while.");
+
+    const guilds = await (await this.guilds.fetch()).array();
+
+    // it looks nice... i had to
+    let memberCount = 0;
+
+    for (const guild of guilds) {
+      const members = await (await guild.members.fetch()).array();
+
+      // Increments the memberCount for the debug output
+      memberCount = memberCount + members.length;
+
+      for (const member of members) {
+        // Skip bots...
+        if (member.user.bot) continue;
+
+        const user = await db.user.findUnique({
+          where: {
+            discordId: member.user.id,
+          },
+        });
+
+        // If use doesn't exist, create a new one.
+        if (!user) {
+          // TODO: move user creation somewhere else
+          await db.user.create({
+            data: {
+              username: member.user.username,
+              discordId: member.user.id,
+              verification: {
+                create: {
+                  answer: null,
+                },
+              },
+            },
+          });
+        }
+
+        await db.user;
+      }
+    }
+
+    this.logger.info(
+      greenBright(
+        `Synced ${bold(memberCount)} user(s) across ${bold(
+          guilds.length
+        )} guild(s)`
+      )
+    );
+    this.logger.info("");
+
+    // todo
   }
 
   private async loadEvents() {
@@ -33,7 +120,7 @@ export class EuphoriaClient extends Client {
       const evt: { default?: Event<any> } = await import(event);
 
       if (!evt.default) {
-        console.warn(
+        this.logger.warn(
           yellow(
             `Event ${bold(
               path.parse(event)
@@ -45,8 +132,8 @@ export class EuphoriaClient extends Client {
       this.on(evt.default.trigger, evt.default.run);
     }
 
-    console.log(
-      greenBright(`Registered ${this.commands.length} event listeners`)
+    this.logger.info(
+      greenBright(`Registered ${this.commands.length} event listener(s)`)
     );
   }
 
@@ -57,7 +144,7 @@ export class EuphoriaClient extends Client {
       const cmd: { default?: Command } = await import(command);
 
       if (!cmd.default) {
-        console.warn(
+        this.logger.warn(
           yellow(
             `Command ${bold(
               path.parse(command)
@@ -69,7 +156,9 @@ export class EuphoriaClient extends Client {
       this.commands.push(cmd.default);
     }
 
-    console.log(greenBright(`Registered ${this.commands.length} commands`));
+    this.logger.info(
+      greenBright(`Registered ${this.commands.length} command(s)`)
+    );
   }
 
   public getCommands() {
