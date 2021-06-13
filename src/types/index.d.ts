@@ -4,7 +4,8 @@ import {
   Snowflake,
   StringResolvable,
   TextChannel,
-} from "discord.js-light";
+  ClientEvents,
+} from "discord.js";
 import { EuphoriaClient } from "../discord/client";
 
 export interface Container {
@@ -22,7 +23,7 @@ export interface Command {
   aliases: string[];
   permissions?: {
     roles: Snowflake[];
-    only?: boolean;
+    every?: boolean;
     failMessage?: (context: CommandContext) => StringResolvable;
   };
   // default: false
@@ -31,10 +32,10 @@ export interface Command {
   run: (context: CommandContext) => Promise<unknown>;
 }
 
-export interface Event {
-  name: string;
+export interface Event<T extends keyof ClientEvents> {
+  trigger: T;
   // TODO: types
-  run: (context: any) => Promise<unknown>;
+  run: (...ctx: ClientEvents[T]) => Promise<unknown>;
 }
 
 export interface CreateCommandOptions {

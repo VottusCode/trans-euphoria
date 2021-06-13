@@ -1,5 +1,9 @@
+import { bold, redBright } from "chalk";
+
 export class NoEnvFoundException extends Error {
   constructor(variable: string, message?: string) {
-    super(message ?? `Environment variable ${variable} not found.`);
+    super(
+      message ?? redBright(`Environment variable ${bold(variable)} not found.`)
+    );
   }
 }

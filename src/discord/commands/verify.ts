@@ -1,5 +1,5 @@
 import { VerificationState } from "@prisma/client";
-import { startVerification } from "discord/verification/start";
+import { startVerification } from "../verification/start";
 import { services } from "../../utils/container";
 import { createCommand } from "../constructors";
 
@@ -8,7 +8,7 @@ export default createCommand(
   {
     permissions: {
       roles: [],
-      only: true,
+      every: true,
       failMessage: ({ message }) =>
         `${message.author.username}, you are already verified.`,
     },

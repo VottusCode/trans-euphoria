@@ -1,4 +1,5 @@
 import type { Command, CreateCommandOptions, Event } from "../types";
+import type { ClientEvents } from "discord.js";
 
 export const createCommand = (
   name: Command["name"],
@@ -11,7 +12,10 @@ export const createCommand = (
   run,
 });
 
-export const createEvent = (name: Event["name"], run: Event["run"]): Event => ({
-  name,
+export const createEvent = <T extends keyof ClientEvents>(
+  trigger: T,
+  run: Event<T>["run"]
+): Event<T> => ({
+  trigger,
   run,
 });

@@ -1,6 +1,6 @@
 import type { Message, StringResolvable } from "discord.js";
 import { Prisma, User, Verification, VerificationState } from "@prisma/client";
-import { services } from "utils/container";
+import { services } from "../../utils/container";
 import slugify from "slugify";
 
 interface StartVerificationOptions {

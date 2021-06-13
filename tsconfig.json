@@ -4,7 +4,6 @@
   },
   "compilerOptions": {
     "outDir": "./dist",
-    "baseUrl": "./src",
     "rootDir": "./src",
     "module": "commonjs",
     "target": "ES2020",
