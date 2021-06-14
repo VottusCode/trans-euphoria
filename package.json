@@ -41,6 +41,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon src/starter.ts",
     "prod": "cross-env NODE_ENV=production node dist/starter.js",
+    "build": "tsc -p tsconfig.json",
     "format": "prisma format && prettier --write src/**/*.ts"
   }
 }
