@@ -42,7 +42,7 @@ model User {
   // The discord id
   discordId      String       @unique
   // The guild id
-  guildId String
+  guildId        String
   // User Profile, it is nullable as unverified users
   // do not have a profile yet.
   profile        Profile?
@@ -76,7 +76,7 @@ model Verification {
   // The user being verified.
   user      User?
   // Verification answer
-  answer String?
+  answer    String?
   // Verification State
   state     VerificationState @default(PreVerify)
   // Discord Channel Id - required for non-closed verifications,
