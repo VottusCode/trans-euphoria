@@ -8,7 +8,7 @@ export default createCommand(
   "verify",
   {
     permissions: {
-      roles: [env(Env.ROLE_UNVERIFIED_ID)],
+      roles: [env(Env.ROLE_UNVERIFIED_ROLE_ID)],
       every: true,
       failMessage: ({ message }) =>
         `${message.author.username}, you are already verified.`,
@@ -38,6 +38,10 @@ export default createCommand(
     // Check if the state is not Preverify, if the user is already verifying or is banned,
     // send them a notice. Other states are allowed (PreVerify, Denied - they can reapply.)
     if (user.verification.state !== VerificationState.PreVerify) {
+      if (user.verification.state === VerificationState.Approved) {
+        return await message.reply("you have already been verified!");
+      }
+
       if (user.verification.state === VerificationState.Verifying) {
         return await message.reply(
           "you are already being verified. Please check the channel that's been created for you."
@@ -52,8 +56,9 @@ export default createCommand(
     }
 
     startVerification({
-      message,
+      member: message.member,
       user,
+      rehook: false,
     });
   }
 );

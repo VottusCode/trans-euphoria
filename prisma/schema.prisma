@@ -30,6 +30,7 @@ enum VerificationState {
   Verifying // Currently verifying
   Denied // Denied, can try again
   Denied_Permanent // Denied, banned from retrying - trolls 
+  Approved // Approved
 }
 
 model User {
@@ -40,6 +41,8 @@ model User {
   username       String
   // The discord id
   discordId      String       @unique
+  // The guild id
+  guildId String
   // User Profile, it is nullable as unverified users
   // do not have a profile yet.
   profile        Profile?

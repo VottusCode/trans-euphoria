@@ -12,6 +12,7 @@ CREATE TABLE "te_users" (
     "id" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "discordId" TEXT NOT NULL,
+    "guildId" TEXT NOT NULL,
     "verificationId" TEXT NOT NULL,
 
     PRIMARY KEY ("id")
@@ -32,7 +33,7 @@ CREATE TABLE "te_user_profile" (
 -- CreateTable
 CREATE TABLE "te_user_verification" (
     "id" TEXT NOT NULL,
-    "answer" TEXT NOT NULL,
+    "answer" TEXT,
     "state" "VerificationState" NOT NULL DEFAULT E'PreVerify',
     "channelId" TEXT,
 

@@ -18,6 +18,8 @@ export interface Container {
 export interface CommandContext {
   args: string[];
   message: Message;
+  command: string;
+  prefix: string;
 }
 
 export interface Command {

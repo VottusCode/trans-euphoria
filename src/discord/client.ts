@@ -8,6 +8,7 @@ import { Command, Event } from "../types";
 import { service, services } from "../utils/container";
 import { Env, env } from "../utils/env";
 import { inviteUrl } from "../utils/invite";
+import { rehookVerification } from "./verification/rehook";
 
 // Event overrides:
 // ready -> euphoriaReady
@@ -36,6 +37,7 @@ export class EuphoriaClient extends Client {
       );
 
       await this.syncUsers();
+      await rehookVerification();
       await this.loadCommands();
       await this.loadEvents();
 
@@ -93,6 +95,7 @@ export class EuphoriaClient extends Client {
                   answer: null,
                 },
               },
+              guildId: guild.id,
             },
           });
         }

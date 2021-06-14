@@ -1,5 +1,5 @@
 import { EuphoriaClient } from "./discord/client";
-import { dev, Env, env } from "./utils/env";
+import { dev, Env, env, ver } from "./utils/env";
 import { registerContainerServices } from "@matherioneu/container";
 import { PrismaClient } from "@prisma/client";
 import { createLogger } from "winston";
@@ -18,13 +18,7 @@ export const start = async () => {
   );
 
   // Start
-  logger.info(
-    magenta.bold(
-      `Starting ${rainbow("Euphoria")} bot v${
-        require("../package.json").version
-      }`
-    )
-  );
+  logger.info(magenta.bold(`Starting ${rainbow("Euphoria")} bot v${ver}`));
 
   // Notice
   logger.info(

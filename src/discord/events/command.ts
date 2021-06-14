@@ -1,6 +1,8 @@
 import { Env, env } from "../../utils/env";
 import { services } from "../../utils/container";
 import { createEvent } from "../constructors";
+import { CommandContext } from "../../types";
+import { noPermEmbed } from "../../utils/embeds";
 
 export default createEvent("message", async (message) => {
   const { bot } = services();
@@ -9,8 +11,6 @@ export default createEvent("message", async (message) => {
 
   // Check whether the message starts with the command prefix.
   if (!message.content.startsWith(prefix)) return;
-
-  console.log("[debug] starts with prefix");
 
   // Parses the args of the message.
   const args = message.content.slice(prefix.length).trim().split(" ");
@@ -21,21 +21,20 @@ export default createEvent("message", async (message) => {
   const commandName = args.shift();
 
   // The command context
-  const ctx = { message, args };
-
-  console.log("[debug]", { ctx, commandName });
+  const ctx: CommandContext = {
+    message,
+    args,
+    prefix,
+    command: commandName,
+  };
 
   for (const command of bot.getCommands()) {
     // If the name doesn't match, skip
     if (command.name !== commandName) continue;
 
-    console.log("[debug] command match", command);
-
     // Check if the command isn't disabled for bots
     // and the message author isn't a bot.
     if (command.bots && message.author.bot) return;
-
-    console.log("[debug] botfuck verified");
 
     // If the command requires permissions, check for them.
     if (command.permissions) {
@@ -48,10 +47,11 @@ export default createEvent("message", async (message) => {
         command.permissions.every ? "every" : "some"
       ]((id) => roleCache.some((r) => r.id === id));
 
-      console.log("[debug] can", can);
-
       // Send a fail message
       if (!can) {
+        command.permissions.failMessage =
+          command.permissions.failMessage ?? (() => noPermEmbed());
+
         return await message.channel.send(command.permissions.failMessage(ctx));
       }
     }
