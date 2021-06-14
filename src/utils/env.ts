@@ -19,6 +19,11 @@ export enum Env {
   // The role for users that are able to verify others
   ADMIN_VERIFY_ROLE_ID = "ADMIN_VERIFY_ROLE_ID",
   VERIFY_CATEGORY_ID = "VERIFY_CATEGORY_ID",
+  CORS = "CORS",
+  PORT = "PORT",
+  HOST = "HOST",
+  CLIENT_SECRET = "CLIENT_SECRET",
+  CALLBACK_URL = "CALLBACK_URL",
 }
 
 export enum Environment {
@@ -26,14 +31,14 @@ export enum Environment {
   PROD = "production",
 }
 
-export const env = (variable: Env): string => {
+export const env = (variable: Env, fallback?: string): string => {
   const val = process.env[variable];
 
-  if (!val) {
+  if (!val && !fallback) {
     throw new NoEnvFoundException(variable);
   }
 
-  return val;
+  return val ?? fallback;
 };
 
 export const dev = () => env(Env.NODE_ENV) === "development";

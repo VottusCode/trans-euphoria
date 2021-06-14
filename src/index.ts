@@ -3,9 +3,23 @@ import { dev, Env, env, ver } from "./utils/env";
 import { registerContainerServices } from "@matherioneu/container";
 import { PrismaClient } from "@prisma/client";
 import { createLogger } from "winston";
-import { createLoggerOptions } from "@fasteerjs/fasteer";
+import { createLoggerOptions, createFasteer } from "@fasteerjs/fasteer";
 import { rainbow } from "./utils/chalk";
-import { magenta, whiteBright } from "chalk";
+import { bold, cyanBright, magenta, whiteBright } from "chalk";
+import { services } from "./utils/container";
+import path from "path";
+import { getSecret } from "./utils/secret";
+import { lifecycle } from "./http/lifecycle";
+import { sessions } from "./http/lifecycle/sessions";
+
+const CONTROLLERS_DIRECTORY = path.join(
+  __dirname,
+  "http",
+  "controllers",
+  "*.ts"
+);
+const COOKIE_SECRET_PATH = path.join(__dirname, "..", "cookie_key.secret");
+const PUBLIC_DIRECTORY = path.join(__dirname, "..", "frontend", "dist");
 
 export const start = async () => {
   const db = new PrismaClient();
@@ -43,5 +57,37 @@ export const start = async () => {
   const bot = new EuphoriaClient(env(Env.BOT_TOKEN));
   await bot.start();
 
+  // Register the bot in as a service
   registerContainerServices({ bot });
+
+  // Create the webserver
+  const server = createFasteer({
+    controllers: CONTROLLERS_DIRECTORY,
+    port: env(Env.PORT, "4200"),
+    host: env(Env.HOST, "127.0.0.1"),
+    cors: {
+      origin: env(Env.CORS, "127.0.0.1:3001"),
+      credentials: true,
+    },
+    helmet: true,
+  });
+
+  server.logger = logger;
+
+  server
+    // Request lifecycle
+    .plugin(lifecycle(PUBLIC_DIRECTORY))
+    // Passport & sessions
+    .plugin(sessions(COOKIE_SECRET_PATH));
+
+  registerContainerServices({ server });
+
+  // Inject all container serices
+  server.inject(services());
+
+  // Once the bot has started, start the webserver
+  bot.on("euphoriaReady", async () => {
+    const addr = await server.start();
+    logger.info(cyanBright(`Webserver started! URL: ${bold(addr)}`));
+  });
 };

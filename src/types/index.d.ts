@@ -1,3 +1,4 @@
+import { Fasteer, FasteerInstance } from "@fasteerjs/fasteer";
 import { PrismaClient } from "@prisma/client";
 import {
   Message,
@@ -8,10 +9,12 @@ import {
 } from "discord.js";
 import { Logger } from "winston";
 import { EuphoriaClient } from "../discord/client";
+import { FastifyInstance } from "fastify";
 
 export interface Container {
   db: PrismaClient;
   bot: EuphoriaClient;
+  server: FasteerInstance;
   logger: Logger;
 }
 
@@ -48,3 +51,5 @@ export interface CreateCommandOptions {
   bots?: boolean;
   rateLimit?: number;
 }
+
+export type Controller = Fasteer.FCtrl<FastifyInstance, {}, Container>;
