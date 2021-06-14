@@ -8,7 +8,7 @@
     "module": "commonjs",
     "target": "ES2020",
     "esModuleInterop": true,
-    "declaration": true,
+    "declaration": false,
     "skipLibCheck": true
   }
 }
