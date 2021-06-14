@@ -69,7 +69,10 @@ export const start = async () => {
       origin: env(Env.CORS, "127.0.0.1:3001"),
       credentials: true,
     },
-    helmet: true,
+    helmet: {
+      //temp
+      contentSecurityPolicy: false,
+    },
   });
 
   server.logger = logger;

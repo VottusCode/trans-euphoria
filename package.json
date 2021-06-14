@@ -12,6 +12,7 @@
     "@matherioneu/container": "^1.0.1-2",
     "@prisma/client": "^2.24.1",
     "chalk": "^4.1.1",
+    "cross-env": "^7.0.3",
     "discord.js-light": "^3.5.11",
     "dotenv": "^10.0.0",
     "fastify-passport": "^0.4.2",
@@ -26,7 +27,8 @@
     "sodium-native": "^3.2.1",
     "tsconfig-paths": "^3.9.0",
     "winston": "^3.3.3",
-    "cross-env": "^7.0.3"
+    "vue": "^3.0.5",
+    "vue-router": "^4.0.8"
   },
   "devDependencies": {
     "@types/glob": "^7.1.3",
@@ -36,12 +38,23 @@
     "prettier": "^2.3.1",
     "ts-node": "^10.0.0",
     "ts-node-dev": "^1.1.6",
-    "typescript": "^4.3.2"
+    "typescript": "^4.3.2",
+    "vite": "^2.3.7",
+    "vue-tsc": "^0.1.7",
+    "@tailwindcss/jit": "^0.1.18",
+    "@vitejs/plugin-vue": "^1.2.3",
+    "@vue/compiler-sfc": "^3.0.5",
+    "autoprefixer": "^10.2.6",
+    "postcss": "^8.3.4",
+    "tailwindcss": "^2.1.4"
   },
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon src/starter.ts",
     "prod": "cross-env NODE_ENV=production node dist/starter.js",
-    "build": "tsc -p tsconfig.json",
-    "format": "prisma format && prettier --write src/**/*.ts"
+    "build": "tsc -p tsconfig.json && yarn frontend:build",
+    "format": "prisma format && prettier --write src/**/*.ts",
+    "frontend:dev": "vite frontend",
+    "frontend:serve": "vite preview frontend",
+    "frontend:build": "vite build frontend"
   }
 }
