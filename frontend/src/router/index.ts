@@ -3,7 +3,17 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 export const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    component: () => import("../pages/index.vue"),
+    component: () => import("../layouts/fullscreen.vue"),
+    children: [
+      {
+        path: "/",
+        component: () => import("../pages/index.vue"),
+      },
+      {
+        path: "/dashboard/profile",
+        component: () => import("../pages/dashboard/profile.vue"),
+      },
+    ],
   },
 ];
 

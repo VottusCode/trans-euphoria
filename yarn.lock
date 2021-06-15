@@ -106,6 +106,11 @@
   dependencies:
     purgecss "^3.1.3"
 
+"@headlessui/vue@^1.2.0-105068":
+  version "1.2.0-105068"
+  resolved "https://registry.yarnpkg.com/@headlessui/vue/-/vue-1.2.0-105068.tgz#c8aa4055047d9713e2a3d78acbb96194f61cc144"
+  integrity sha512-YCGiMm30ttdfBWkl3s+Pc6WQo3Fb2uMTsV20iIw0I22S5vZMBdF5NJzPSfRlGjjC4xOBr5VBqrY0BeSer5j6Dw==
+
 "@matherioneu/container@^1.0.1-1", "@matherioneu/container@^1.0.1-2":
   version "1.0.1-2"
   resolved "https://registry.yarnpkg.com/@matherioneu/container/-/container-1.0.1-2.tgz#d685c6d6569d56c2f028d4f84b3edfee64e896be"
@@ -2115,6 +2120,11 @@ helmet@^4.0.0, helmet@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/helmet/-/helmet-4.6.0.tgz#579971196ba93c5978eb019e4e8ec0e50076b4df"
   integrity sha512-HVqALKZlR95ROkrnesdhbbZJFi/rIVSoNq6f3jA/9u6MIbTsPh3xZwihjeI5+DO/2sOV6HMHooXcEOuwskHpTg==
+
+heroicons-vue3@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/heroicons-vue3/-/heroicons-vue3-1.0.1.tgz#324bced2fa9e3bcc7abeab03ebc64f10a0e33ceb"
+  integrity sha512-oSHUq5Nm/ADuBR9c0stAjqsyV9mgsHMX+HUwCU0YsbFqgr/IEi9JyUvGYtJeXrnUyGiFeVPCZ7hTEjde8Y25NQ==
 
 hosted-git-info@^2.1.4:
   version "2.8.9"
