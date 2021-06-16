@@ -7,5 +7,15 @@ export const lifecycle =
       root: staticPath,
     });
 
+    app.fastify.setNotFoundHandler((req, res) => {
+      // API 404
+      if (req.raw.url && req.raw.url.startsWith("/api")) {
+        return; // default handler
+      }
+
+      // Vue SPA
+      res.status(200).sendFile("index.html");
+    });
+
     // TODO
   };

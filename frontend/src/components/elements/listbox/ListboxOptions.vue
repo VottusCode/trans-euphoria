@@ -1,6 +1,7 @@
 <template>
   <TwListboxOptions
-    class="absolute mt-2 bg-white left-0 px-0 py-0 z-10"
+    style="padding: 0 !important"
+    class="absolute mt-2 bg-white left-0 z-10"
     :class="baseClasses"
   >
     <slot />

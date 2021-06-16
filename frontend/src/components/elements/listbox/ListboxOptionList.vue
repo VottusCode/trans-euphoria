@@ -25,7 +25,7 @@
     "
   >
     <span :class="[selected ? 'font-medium' : 'font-normal', 'block truncate']">
-      <slot />
+      {{ item.display }}
     </span>
     <span
       v-if="selected"

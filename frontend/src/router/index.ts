@@ -13,6 +13,10 @@ export const routes: RouteRecordRaw[] = [
         path: "/dashboard/profile",
         component: () => import("../pages/dashboard/profile.vue"),
       },
+      {
+        path: "/dashboard/login",
+        component: () => import("../pages/dashboard/login.vue"),
+      },
     ],
   },
 ];
