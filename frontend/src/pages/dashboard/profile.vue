@@ -6,14 +6,11 @@
       </div>
       <div class="flex items-center justify-end w-full">
         <div class="flex flex-col items-end mr-6">
-          <p>Mia</p>
+          <p>{{ store.user.name }}</p>
           <p class="text-red-500 border-b border-red-500 text-sm">Log out</p>
         </div>
         <div>
-          <img
-            src="https://cdn.discordapp.com/avatars/353861818982203392/a487a2f8e294057ae401d4bb7447a744.webp"
-            class="w-16 h-16 rounded-full"
-          />
+          <img :src="store.user.img" class="w-16 h-16 rounded-full" />
         </div>
       </div>
     </div>
@@ -28,16 +25,21 @@
         <div class="flex items-center mb-4 w-full">
           <div class="flex flex-col w-full">
             <label>Your name</label>
-            <input type="text" :class="baseClasses" class="mt-2 inline-flex" />
+            <input
+              type="text"
+              :class="baseClasses"
+              class="mt-2 inline-flex"
+              v-model="state.name"
+            />
           </div>
         </div>
         <div class="flex items-center w-full mb-8">
           <div class="flex flex-col w-full mr-8">
             <label>Gender</label>
-            <Listbox v-model="gender">
+            <Listbox v-model="state.gender">
               <div class="relative mt-2">
                 <listbox-button>
-                  {{ gender.display }}
+                  {{ state.gender.display }}
                 </listbox-button>
                 <listbox-options>
                   <listbox-option-list :list="genders" />
@@ -47,10 +49,10 @@
           </div>
           <div class="flex flex-col mr-8 w-full">
             <label>Pronouns</label>
-            <Listbox v-model="pronoun">
+            <Listbox v-model="state.pronouns">
               <div class="relative mt-2">
                 <listbox-button>
-                  {{ pronoun.display }}
+                  {{ state.pronouns.display }}
                 </listbox-button>
                 <listbox-options>
                   <listbox-option-list :list="pronouns" />
@@ -61,10 +63,10 @@
           <div class="flex flex-col w-full">
             <div>
               <label>Sexuality</label>
-              <Listbox v-model="sex">
+              <Listbox v-model="state.sex">
                 <div class="relative mt-2">
                   <listbox-button>
-                    {{ sex.display }}
+                    {{ state.sex.display }}
                   </listbox-button>
                   <listbox-options>
                     <listbox-option-list :list="sexes" />
@@ -82,6 +84,7 @@
               :class="baseClasses"
               placeholder="Introduce yourself in few short sentences..."
               class="mt-2 inline-flex"
+              v-model="state.about"
             />
           </div>
         </div>
@@ -94,7 +97,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, reactive, ref } from "vue";
 import CardWrapper from "../../components/elements/CardWrapper.vue";
 import { BASE_BUTTON_CLASSES as baseClasses } from "../../components/elements/button";
 import { Listbox, ListboxOption } from "@headlessui/vue";
@@ -103,6 +106,8 @@ import MainTitle from "../../components/elements/MainTitle.vue";
 import ListboxButton from "../../components/elements/listbox/ListboxButton.vue";
 import ListboxOptions from "../../components/elements/listbox/ListboxOptions.vue";
 import ListboxOptionList from "../../components/elements/listbox/ListboxOptionList.vue";
+import { store } from "../../store";
+import { genders, pronouns, sexes } from "../../profile";
 
 export default defineComponent({
   components: {
@@ -117,97 +122,42 @@ export default defineComponent({
     ListboxOptionList,
   },
   setup() {
-    const genders = [
-      {
-        name: "male",
-        display: "Male",
-      },
-      {
-        name: "female",
-        display: "Female",
-      },
-      {
-        name: "non_binary",
-        display: "Non Binary",
-      },
-      {
-        name: "other",
-        display: "Other",
-      },
-    ];
+    // the current state.
+    // shallow-copies the global state as default value
+    const state = reactive({ ...store.user });
 
-    const gender = ref(genders[3]);
+    // Is changing the state disabled?
+    // Toggled during saving.
+    const changeDisabled = ref(false);
 
-    type Pronouns = [string, string, string, string, string];
+    const hasStateChanged = () =>
+      Object.keys(state).some((k) => state[k] !== store.user[k]);
 
-    let pronouns: {
-      name: string;
-      list: Pronouns | string[];
-      display?: string;
-    }[] = [
-      {
-        name: "he",
-        list: ["He", "Him", "His", "His", "Himself"],
-      },
-      {
-        name: "she",
-        list: ["She", "Her", "Her", "Hers", "Herself"],
-      },
-      {
-        name: "they",
-        list: ["They", "Them", "Their", "Theirs", "Themself"],
-      },
-      {
-        name: "other",
-        list: ["Other"],
-      },
-    ];
+    const sendForm = async () => {
+      if (changeDisabled.value) return;
+      if (!hasStateChanged()) return;
 
-    // adding display without the need to type the pronouns out like an idiot
-    pronouns = pronouns.map((p) => ({ ...p, display: p.list.join("/") }));
+      changeDisabled.value = true;
 
-    const pronoun = ref(pronouns[3]);
+      // save changes to the copy
+      for (const k in state) {
+        store.user[k] = state[k];
+      }
 
-    const sexes = [
-      {
-        name: "straight",
-        display: "Straight",
-      },
-      {
-        name: "gay_lesbian",
-        display: "Gay/Lesbian",
-      },
-      {
-        name: "bisexual",
-        display: "Bisexual",
-      },
-      {
-        name: "pansexual",
-        display: "Pansexual",
-      },
-      {
-        name: "asexual",
-        display: "Asexual",
-      },
-      {
-        name: "other",
-        display: "Other",
-      },
-    ];
+      changeDisabled.value = false;
 
-    const sex = ref(sexes[5]);
-
-    const sendForm = () => {};
+      // TODO
+      console.log("saved");
+    };
 
     return {
       sendForm,
       baseClasses,
       genders,
-      gender,
       pronouns,
-      pronoun,
       sexes,
-      sex,
+      state,
+      store,
     };
   },
 });

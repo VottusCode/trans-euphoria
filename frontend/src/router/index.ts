@@ -10,6 +10,10 @@ export const routes: RouteRecordRaw[] = [
         component: () => import("../pages/index.vue"),
       },
       {
+        path: "/pronouns/:id",
+        component: () => import("../pages/pronouns.vue"),
+      },
+      {
         path: "/dashboard/profile",
         component: () => import("../pages/dashboard/profile.vue"),
       },
