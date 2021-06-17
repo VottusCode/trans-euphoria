@@ -1,5 +1,5 @@
 import { Fasteer, FasteerInstance } from "@fasteerjs/fasteer";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import {
   Message,
   Snowflake,
@@ -53,3 +53,5 @@ export interface CreateCommandOptions {
 }
 
 export type Controller = Fasteer.FCtrl<FastifyInstance, {}, Container>;
+
+export interface PassportUser extends User {}

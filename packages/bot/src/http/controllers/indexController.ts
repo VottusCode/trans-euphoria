@@ -1,4 +1,4 @@
-import { Controller } from "../types";
+import { Controller } from "../../types";
 
 const IndexController: Controller = async (app, {}) => {
   //

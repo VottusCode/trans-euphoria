@@ -5,12 +5,21 @@ import fastifyPassport from "fastify-passport";
 import DiscordStrategy from "passport-discord";
 import fastifySecureSession from "fastify-secure-session";
 import { getSecret } from "../../utils/secret";
+import fasteerExceptions, {
+  createExceptionHandler,
+  UnauthorizedException,
+} from "@fasteerjs/exceptions";
 
 export const sessions =
   (cookieSecretPath: string) => async (server: FasteerInstance) => {
     server.fastify.register(fastifySecureSession, {
       key: getSecret(cookieSecretPath),
       cookieName: "_euphoria_session",
+      cookie: {
+        // todo: enabled based on https
+        sameSite: false,
+        path: "/",
+      },
     });
 
     server.fastify.register(fastifyPassport.initialize());
@@ -24,6 +33,7 @@ export const sessions =
           clientID: env(Env.CLIENT_ID),
           clientSecret: env(Env.CLIENT_SECRET),
           callbackURL: env(Env.CALLBACK_URL),
+          scope: ["identify"],
         },
         // We only use the discord strategy for authenticating once.
         async (_, __, profile, done) => {
@@ -34,13 +44,19 @@ export const sessions =
           });
 
           if (!user) {
-            done(new Error("This discord account is not registered."));
+            done(
+              new UnauthorizedException(
+                "This discord account is not registered."
+              )
+            );
           }
 
           done(null, user);
         }
       )
     );
+
+    server.fastify.setErrorHandler(createExceptionHandler({}));
 
     fastifyPassport.registerUserSerializer(async (user: any) => user.id);
 

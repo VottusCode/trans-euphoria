@@ -78,6 +78,11 @@
   resolved "https://registry.yarnpkg.com/@emmetio/scanner/-/scanner-1.0.0.tgz#065b2af6233fe7474d44823e3deb89724af42b5f"
   integrity sha512-8HqW8EVqjnCmWXVpqAOZf+EGESdkR27odcMMMGefgKXtar00SoYNSryGv//TELI4T3QFsECo78p+0lmalk/CFA==
 
+"@fasteerjs/exceptions@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@fasteerjs/exceptions/-/exceptions-1.0.2.tgz#bd973f85c21e850952619977d7a75d3e970d8fbe"
+  integrity sha512-oo+c+iCbBtUBKyf907i68W+IupiOhCstoak7LeVWld5dQRR6TNvYuedkjSeOdnQd+mu4IikYe057WxbJzOpS/Q==
+
 "@fasteerjs/fasteer@^3.1.4":
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/@fasteerjs/fasteer/-/fasteer-3.1.4.tgz#321e9ea48b14ce7feaaa9a28aeb2ae9117984b0d"

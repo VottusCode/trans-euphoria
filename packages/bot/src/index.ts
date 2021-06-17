@@ -12,15 +12,11 @@ import { lifecycle } from "./http/lifecycle";
 import { sessions } from "./http/lifecycle/sessions";
 
 // Path to all controllers.
-const CONTROLLERS_DIRECTORY = path.join(
-  __dirname,
-  "http",
-  "controllers",
-  "*.ts"
-);
+// prettier-ignore
+const CONTROLLERS_DIRECTORY = path.join(__dirname, "http", "controllers", "**", "*.ts");
 
 // Path to the cookie secret used to sign cookies.
-// i swear to fucking god im going to kill you someday
+// i swear to fucking god im going to kill prettier someday
 // prettier-ignore
 const COOKIE_SECRET_PATH = path.join(__dirname, "..", "..", "..", "cookie_key.secret");
 

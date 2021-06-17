@@ -81,6 +81,10 @@ export const startVerification = async ({
             "If you do not feel comfortable answering, answering 'Other' is fine."
           ),
           field("3. Are you trans?", "Questioning or ex-trans is fine too."),
+          field(
+            "4. Why did you join the server?",
+            "What do you expect to find here?"
+          ),
         ])
     );
   }

@@ -3,8 +3,6 @@ import { ChannelNotFoundException } from "../../exceptions/ChannelNotFoundExcept
 import { RoleNotFoundException } from "../../exceptions/RoleNotFoundException";
 import { Env, env } from "../../utils/env";
 
-console.log(env(Env.ADMIN_VERIFY_ROLE_ID));
-
 /**
  * Creates the verification channel.
  *

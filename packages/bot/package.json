@@ -9,6 +9,7 @@
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@fasteerjs/exceptions": "^1.0.2",
     "@fasteerjs/fasteer": "^3.1.4",
     "@matherioneu/container": "^1.0.1-2",
     "@prisma/client": "^2.24.1",
@@ -32,10 +33,10 @@
     "@types/glob": "^7.1.3",
     "@types/node": "^15.12.2",
     "@types/passport-discord": "^0.1.3",
-    "typescript": "^4.3.2",
+    "autoprefixer": "^10.2.6",
+    "nodemon": "^2.0.7",
     "ts-node": "^10.0.0",
     "ts-node-dev": "^1.1.6",
-    "autoprefixer": "^10.2.6",
-    "nodemon": "^2.0.7"
+    "typescript": "^4.3.2"
   }
 }
