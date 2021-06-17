@@ -1,0 +1,29 @@
+{
+  "name": "@trans-euphoria/frontend",
+  "description": "Intuitive Vue-powered UI for the discord bot.",
+  "author": "Mia <vottus@vott.us>",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "watch": "yarn build --watch",
+    "serve": "vite preview",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@headlessui/vue": "^1.2.0-105068",
+    "heroicons-vue3": "^1.0.1",
+    "vue": "^3.0.5",
+    "vue-router": "^4.0.8",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/jit": "^0.1.18",
+    "@vitejs/plugin-vue": "^1.2.3",
+    "@vue/compiler-sfc": "^3.0.5",
+    "postcss": "^8.3.4",
+    "vite": "^2.3.7",
+    "vue-tsc": "^0.1.7",
+    "tailwindcss": "^2.1.4",
+    "typescript": "^4.3.2"
+  }
+}

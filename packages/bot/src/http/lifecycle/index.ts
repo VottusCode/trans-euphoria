@@ -10,7 +10,13 @@ export const lifecycle =
     app.fastify.setNotFoundHandler((req, res) => {
       // API 404
       if (req.raw.url && req.raw.url.startsWith("/api")) {
-        return; // default handler
+        return res.status(404).send({
+          success: false,
+          error: {
+            kind: "user_input",
+            message: "Not Found",
+          },
+        }); // default handler
       }
 
       // Vue SPA

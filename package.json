@@ -1,66 +1,26 @@
 {
-  "name": "@trans-euphroia/bot",
+  "name": "trans-euphroia",
   "version": "1.0.0",
-  "description": "Discord bot for the Trans Euphoria server.",
+  "description": "Discord bot for the Trans Euphoria server with a nice web UI.",
   "author": {
     "name": "Mia",
     "email": "vottus@vott.us"
   },
+  "workspaces": [
+    "packages/*"
+  ],
+  "private": true,
   "homepage": "https://discord.gg/34XvAF25Cs",
-  "dependencies": {
-    "@fasteerjs/fasteer": "^3.1.4",
-    "@headlessui/vue": "^1.2.0-105068",
-    "@matherioneu/container": "^1.0.1-2",
-    "@prisma/client": "^2.24.1",
-    "chalk": "^4.1.1",
-    "cross-env": "^7.0.3",
-    "discord.js-light": "^3.5.11",
-    "dotenv": "^10.0.0",
-    "fastify-passport": "^0.4.2",
-    "fastify-secure-session": "^2.3.1",
-    "fastify-static": "^4.2.2",
-    "heroicons-vue3": "^1.0.1",
-    "liquidjs": "^9.25.0",
-    "passport-discord": "^0.1.4",
-    "passport-oauth2-refresh": "^2.0.2",
-    "point-of-view": "^4.14.0",
-    "prisma": "^2.24.1",
-    "slugify": "^1.5.3",
-    "sodium-native": "^3.2.1",
-    "tsconfig-paths": "^3.9.0",
-    "vue": "^3.0.5",
-    "vue-router": "^4.0.8",
-    "winston": "^3.3.3"
-  },
   "devDependencies": {
-    "@tailwindcss/jit": "^0.1.18",
-    "@types/glob": "^7.1.3",
-    "@types/node": "^15.12.2",
-    "@types/passport-discord": "^0.1.3",
-    "@vitejs/plugin-vue": "^1.2.3",
-    "@vue/compiler-sfc": "^3.0.5",
-    "autoprefixer": "^10.2.6",
     "concurrently": "^6.2.0",
-    "nodemon": "^2.0.7",
-    "postcss": "^8.3.4",
-    "prettier": "^2.3.1",
-    "tailwindcss": "^2.1.4",
-    "ts-node": "^10.0.0",
-    "ts-node-dev": "^1.1.6",
-    "typescript": "^4.3.2",
-    "vite": "^2.3.7",
-    "vue-tsc": "^0.1.7"
+    "prettier": "^2.3.1"
   },
   "scripts": {
-    "backend:dev": "cross-env NODE_ENV=development nodemon src/starter.ts",
-    "backend:prod": "cross-env NODE_ENV=production node dist/starter.js",
-    "backend:build": "tsc -p tsconfig.json",
-    "dev": "concurrently -k -n 'e:bot,e:vite' -c 'magenta.bold,cyan.bold' 'yarn backend:dev' 'yarn frontend:watch'",
-    "build": "yarn backend:build && yarn frontend:build",
-    "format": "prisma format && prettier --write src/**/*.{ts,js} frontend/src/**/*.{ts,tsx,js,jsx,vue,html}",
-    "frontend:dev": "vite frontend",
-    "frontend:watch": "yarn frontend:build --watch",
-    "frontend:serve": "vite preview frontend",
-    "frontend:build": "vite build frontend"
+    "bot": "yarn workspace @trans-euphoria/bot",
+    "frontend": "yarn workspace @trans-euphoria/frontend",
+    "prod": "yarn bot prod",
+    "dev": "concurrently -k -n 'e:bot,e:vite' -c 'magenta.bold,cyan.bold' 'yarn bot dev' 'yarn frontend watch'",
+    "build": "yarn bot build && yarn bot build",
+    "format": "prisma format && prettier --write packages/**/src/**/*.{ts,tsx,js,jsx,vue,html}"
   }
 }

@@ -8,18 +8,27 @@ import { rainbow } from "./utils/chalk";
 import { bold, cyanBright, magenta, whiteBright } from "chalk";
 import { services } from "./utils/container";
 import path from "path";
-import { getSecret } from "./utils/secret";
 import { lifecycle } from "./http/lifecycle";
 import { sessions } from "./http/lifecycle/sessions";
 
+// Path to all controllers.
 const CONTROLLERS_DIRECTORY = path.join(
   __dirname,
   "http",
   "controllers",
   "*.ts"
 );
-const COOKIE_SECRET_PATH = path.join(__dirname, "..", "cookie_key.secret");
-const PUBLIC_DIRECTORY = path.join(__dirname, "..", "frontend", "dist");
+
+// Path to the cookie secret used to sign cookies.
+// i swear to fucking god im going to kill you someday
+// prettier-ignore
+const COOKIE_SECRET_PATH = path.join(__dirname, "..", "..", "..", "cookie_key.secret");
+
+// Path to the public directory served by fastify-static.
+// If you're looking to adding a public file, don't put it in dist
+// as it is cleaned up by Vite on frontend build, use the frontend/public
+// folder instead.
+const PUBLIC_DIRECTORY = path.join(__dirname, "..", "..", "frontend", "dist");
 
 export const start = async () => {
   const db = new PrismaClient();
