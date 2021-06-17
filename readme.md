@@ -4,11 +4,11 @@ Node.js-powered Discord bot for the Trans Euphoria Discord Server
 
 ## Deployments
 
-| Type       |                    URL                     |
-| :--------- | :----------------------------------------: |
-| Dev        | https://trans-euphoria-prod.herokuapp.com/ |
-| Staging    | https://trans-euphoria-prod.herokuapp.com/ |
-| Production | https://trans-euphoria-prod.herokuapp.com/ |
+| Type       |                      URL                      |
+| :--------- | :-------------------------------------------: |
+| Dev        |   https://trans-euphoria-dev.herokuapp.com/   |
+| Staging    | https://trans-euphoria-staging.herokuapp.com/ |
+| Production |  https://trans-euphoria-prod.herokuapp.com/   |
 
 ## Packages
 
