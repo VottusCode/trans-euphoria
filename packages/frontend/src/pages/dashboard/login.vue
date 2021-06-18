@@ -67,7 +67,7 @@ export default defineComponent({
      */
     if (typeof route.query.code !== "string") {
       redirect();
-      return { state };
+      return { state, redirect };
     }
 
     // Sets the current state to AUTHENTICATING.

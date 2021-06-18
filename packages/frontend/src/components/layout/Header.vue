@@ -1,7 +1,7 @@
 <template>
   <div class="mb-8 flex justify-between">
     <div class="flex items-center w-full">
-      <MainTitle class="text-xl" />
+      <main-title class="text-xl" />
     </div>
     <div class="flex items-center justify-end w-full" v-if="store.user">
       <div class="flex flex-col items-end mr-6">
@@ -34,8 +34,10 @@ import { defineComponent } from "vue";
 import { store } from "../../store";
 import { logout as apiLogout } from "../../api/endpoints/auth";
 import { useRouter } from "vue-router";
+import MainTitle from "../elements/MainTitle.vue";
 
 export default defineComponent({
+  components: { MainTitle },
   setup() {
     const router = useRouter();
 

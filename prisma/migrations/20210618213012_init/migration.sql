@@ -5,15 +5,25 @@ CREATE TYPE "Sexuality" AS ENUM ('Straight', 'Gay_Lesbian', 'Bisexual', 'Pansexu
 CREATE TYPE "Gender" AS ENUM ('Male', 'Female', 'Non_Binary', 'Other');
 
 -- CreateEnum
-CREATE TYPE "VerificationState" AS ENUM ('PreVerify', 'Verifying', 'Denied', 'Denied_Permanent');
+CREATE TYPE "VerificationState" AS ENUM ('PreVerify', 'Verifying', 'Denied', 'Denied_Permanent', 'Approved');
 
 -- CreateTable
 CREATE TABLE "te_users" (
     "id" TEXT NOT NULL,
     "username" TEXT NOT NULL,
-    "discordId" TEXT NOT NULL,
     "guildId" TEXT NOT NULL,
     "verificationId" TEXT NOT NULL,
+    "discordId" TEXT NOT NULL,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "te_discord_accounts" (
+    "id" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
+    "discriminator" TEXT NOT NULL,
+    "avatarId" TEXT NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -51,6 +61,9 @@ CREATE UNIQUE INDEX "te_user_profile_userId_unique" ON "te_user_profile"("userId
 
 -- AddForeignKey
 ALTER TABLE "te_users" ADD FOREIGN KEY ("verificationId") REFERENCES "te_user_verification"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "te_users" ADD FOREIGN KEY ("discordId") REFERENCES "te_discord_accounts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "te_user_profile" ADD FOREIGN KEY ("userId") REFERENCES "te_users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

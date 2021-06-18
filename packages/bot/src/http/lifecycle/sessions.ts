@@ -5,7 +5,7 @@ import fastifyPassport from "fastify-passport";
 import DiscordStrategy from "passport-discord";
 import fastifySecureSession from "fastify-secure-session";
 import { getSecret } from "../../utils/secret";
-import fasteerExceptions, {
+import {
   createExceptionHandler,
   UnauthorizedException,
 } from "@fasteerjs/exceptions";
@@ -39,19 +39,36 @@ export const sessions = (cookieSecretPath: string) => async (
       },
       // We only use the discord strategy for authenticating once.
       async (_, __, profile, done) => {
-        const user = await db.user.findFirst({
+        let account = await db.discordAccount.findFirst({
           where: {
-            discordId: profile.id,
+            id: profile.id,
+          },
+          include: {
+            user: true,
           },
         });
 
-        if (!user) {
-          done(
+        if (!account || !account.user) {
+          return done(
             new UnauthorizedException("This discord account is not registered.")
           );
         }
 
-        done(null, user);
+        account = await db.discordAccount.update({
+          where: {
+            id: profile.id,
+          },
+          data: {
+            username: profile.username,
+            discriminator: profile.discriminator,
+            avatarId: profile.avatar,
+          },
+          include: {
+            user: true,
+          },
+        });
+
+        done(null, account);
       }
     )
   );

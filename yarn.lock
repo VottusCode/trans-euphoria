@@ -115,9 +115,9 @@
     purgecss "^4.0.3"
 
 "@headlessui/vue@^1.2.0-105068":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@headlessui/vue/-/vue-1.2.0.tgz#941ccc8629b11eaa10c09009dad6e3f6cbdc2c79"
-  integrity sha512-nATOiQyGik8qoGFnWdWDaMWlpBLBaybhsa4drUoz/vMggw2fmXqzilAfMXHDwvqzh35SkSb13BEWA8kUSUNgkg==
+  version "1.2.0-105068"
+  resolved "https://registry.yarnpkg.com/@headlessui/vue/-/vue-1.2.0-105068.tgz#c8aa4055047d9713e2a3d78acbb96194f61cc144"
+  integrity sha512-YCGiMm30ttdfBWkl3s+Pc6WQo3Fb2uMTsV20iIw0I22S5vZMBdF5NJzPSfRlGjjC4xOBr5VBqrY0BeSer5j6Dw==
 
 "@matherioneu/container@^1.0.1-1", "@matherioneu/container@^1.0.1-2":
   version "1.0.1-2"

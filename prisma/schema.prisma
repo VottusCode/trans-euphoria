@@ -36,39 +36,43 @@ enum VerificationState {
 model User {
   // The unique id for the user, it differs from the Discord id,
   // that's `discordId`.
-  id             String       @id @default(cuid())
+  id              String         @id @default(cuid())
   // The username, by default it's the discord username.
-  username       String
-  // The discord id
-  discordId      String       @unique
+  username        String
   // The guild id
-  guildId        String
-  // User Profile, it is nullable as unverified users
-  // do not have a profile yet.
-  profile        Profile?
+  guildId         String
+  // Pronouns - they're in the they/them/their/theirs format,
+  // serialized as [they, them, their, theirs].
+  pronouns        String         @default("they/them/their/theirs")
+  // About
+  about           String?
+  // Sexuality
+  sexuality       Sexuality      @default(Other)
+  // Gender
+  gender          Gender         @default(Other)
   // Verification
-  verification   Verification @relation(fields: [verificationId], references: [id])
-  verificationId String
+  verification    Verification   @relation(fields: [verificationId], references: [id])
+  verificationId  String
+  // Discord account
+  discordAccount DiscordAccount @relation(fields: [discordId], references: [id])
+  discordId       String         @unique
 
   @@map("te_users")
 }
 
-model Profile {
-  id        String    @id @default(cuid())
-  // Pronouns - they're in the they/them/their/theirs format,
-  // serialized as [they, them, their, theirs].
-  pronouns  String    @default("they/them/their/theirs")
-  // About
-  about     String?
-  // Sexuality
-  sexuality Sexuality @default(Other)
-  // Gender
-  gender    Gender    @default(Other)
-  // User
-  user      User      @relation(fields: [userId], references: [id])
-  userId    String
+model DiscordAccount {
+  // The discord id of the user
+  id            String @id
+  // Discord username
+  username      String
+  // Discord #
+  discriminator String
+  // Avatar Id
+  avatarId      String
+  // User associated to this discord account
+  user          User?
 
-  @@map("te_user_profile")
+  @@map("te_discord_accounts")
 }
 
 model Verification {

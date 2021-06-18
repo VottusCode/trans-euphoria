@@ -77,30 +77,47 @@ export class EuphoriaClient extends Client {
         // Skip bots...
         if (member.user.bot) continue;
 
-        const user = await db.user.findUnique({
+        const account = await db.discordAccount.findUnique({
           where: {
-            discordId: member.user.id,
+            id: member.user.id,
           },
         });
 
         // If use doesn't exist, create a new one.
-        if (!user) {
+        if (!account) {
           // TODO: move user creation somewhere else
-          await db.user.create({
+          await db.discordAccount.create({
             data: {
+              id: member.user.id,
               username: member.user.username,
-              discordId: member.user.id,
-              verification: {
+              discriminator: member.user.discriminator,
+              avatarId: member.user.avatar,
+              user: {
                 create: {
-                  answer: null,
+                  username: member.user.username,
+                  guildId: guild.id,
+                  verification: {
+                    create: {
+                      answer: null,
+                    },
+                  },
                 },
               },
-              guildId: guild.id,
             },
           });
+          continue;
         }
 
-        await db.user;
+        await db.discordAccount.update({
+          where: {
+            id: member.user.id,
+          },
+          data: {
+            username: member.user.username,
+            discriminator: member.user.discriminator,
+            avatarId: member.user.avatar,
+          },
+        });
       }
     }
 
