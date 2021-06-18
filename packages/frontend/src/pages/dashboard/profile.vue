@@ -106,7 +106,7 @@ import MainTitle from "../../components/elements/MainTitle.vue";
 import ListboxButton from "../../components/elements/listbox/ListboxButton.vue";
 import ListboxOptions from "../../components/elements/listbox/ListboxOptions.vue";
 import ListboxOptionList from "../../components/elements/listbox/ListboxOptionList.vue";
-import { store } from "../../store";
+import { oldStore as store } from "../../store";
 import { genders, pronouns, sexes } from "../../profile";
 
 export default defineComponent({

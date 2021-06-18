@@ -1,5 +1,8 @@
 <template>
-  <a :class="classes" disabled>
+  <router-link v-if="to" :to="to" :disabled="disabled" :class="classes">
+    <slot />
+  </router-link>
+  <a v-else :href="href" :disabled="disabled" :class="classes">
     <slot />
   </a>
 </template>
@@ -17,6 +20,13 @@ export default defineComponent({
     bg: {
       type: String,
       default: "bg-transparent",
+    },
+    href: {
+      type: String,
+      default: "#",
+    },
+    to: {
+      type: String,
     },
   },
   setup(props) {

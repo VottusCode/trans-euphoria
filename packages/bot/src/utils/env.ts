@@ -23,7 +23,8 @@ export enum Env {
   PORT = "PORT",
   HOST = "HOST",
   CLIENT_SECRET = "CLIENT_SECRET",
-  CALLBACK_URL = "CALLBACK_URL",
+  API_CALLBACK_URL = "API_CALLBACK_URL",
+  WEB_CALLBACK_URL = "WEB_CALLBACK_URL",
 }
 
 export enum Environment {

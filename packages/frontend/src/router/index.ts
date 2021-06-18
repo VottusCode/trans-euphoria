@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { syncUser } from "./middleware/syncUser";
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -16,6 +17,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: "/dashboard/profile",
         component: () => import("../pages/dashboard/profile.vue"),
+        beforeEnter: syncUser(),
       },
       {
         path: "/dashboard/login",

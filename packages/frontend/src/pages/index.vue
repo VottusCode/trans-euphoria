@@ -4,7 +4,7 @@
     <div class="mt-6">
       <ButtonAnchor :href="invite" class="mr-4"> Join the Server </ButtonAnchor>
       <ButtonAnchor :href="disboard" class="mr-4"> Disboard </ButtonAnchor>
-      <Button disabled> Profile (Soon) </Button>
+      <ButtonAnchor to="/dashboard/profile"> Profile </ButtonAnchor>
     </div>
   </CardWrapper>
 </template>

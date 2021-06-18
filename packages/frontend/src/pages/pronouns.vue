@@ -30,7 +30,7 @@
 // TODO: currently using store.user as a placeholder
 import { defineComponent } from "vue";
 import CardWrapper from "../components/elements/CardWrapper.vue";
-import { store } from "../store";
+import { oldStore as store } from "../store";
 
 export default defineComponent({
   components: {
