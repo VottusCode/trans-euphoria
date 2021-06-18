@@ -1,19 +1,6 @@
 <template>
   <CardWrapper>
-    <div class="mb-8 flex justify-between">
-      <div class="flex items-center w-full">
-        <MainTitle class="text-xl" />
-      </div>
-      <div class="flex items-center justify-end w-full">
-        <div class="flex flex-col items-end mr-6">
-          <p>{{ store.user.name }}</p>
-          <p class="text-red-500 border-b border-red-500 text-sm">Log out</p>
-        </div>
-        <div>
-          <img :src="store.user.img" class="w-16 h-16 rounded-full" />
-        </div>
-      </div>
-    </div>
+    <Header />
 
     <div class="mb-8">
       <h1 class="text-4xl font-medium">Your Profile</h1>
@@ -108,6 +95,7 @@ import ListboxOptions from "../../components/elements/listbox/ListboxOptions.vue
 import ListboxOptionList from "../../components/elements/listbox/ListboxOptionList.vue";
 import { oldStore as store } from "../../store";
 import { genders, pronouns, sexes } from "../../profile";
+import Header from "../../components/layout/Header.vue";
 
 export default defineComponent({
   components: {
@@ -120,6 +108,7 @@ export default defineComponent({
     SelectorIcon,
     MainTitle,
     ListboxOptionList,
+    Header,
   },
   setup() {
     // the current state.

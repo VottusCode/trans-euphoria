@@ -17,6 +17,17 @@ const AuthController: Controller = async (app) => {
       });
     }
   );
+
+  app.get("/logout", async (req, res) => {
+    req.session.delete();
+
+    res.send({
+      success: true,
+      data: {
+        message: "ok",
+      },
+    });
+  });
 };
 
 export const routePrefix = api("auth");

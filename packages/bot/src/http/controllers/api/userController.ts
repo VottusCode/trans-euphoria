@@ -32,7 +32,7 @@ const UserController: Controller = async (app, { db }) => {
       data: {
         // TODO: transform
         user: {
-          ...req.user,
+          ...user,
           guildId: undefined,
           verificationId: undefined,
         },

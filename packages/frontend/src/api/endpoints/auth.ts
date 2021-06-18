@@ -13,3 +13,9 @@ export const authorize = (code: string) =>
       code,
     },
   });
+
+export const logout = () =>
+  $http.request<SuccessOrErrorPartial<AuthorizeData>>({
+    method: "GET",
+    url: "/auth/logout",
+  });

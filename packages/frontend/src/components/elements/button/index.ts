@@ -24,5 +24,6 @@ export const computedButtonClasses = (disabled = false, bg = "") =>
       BASE_BUTTON_CLASSES,
       bg,
       disabled ? DISABLED_BUTTON_CLASSES : ENABLED_BUTTON_CLASSES,
+      "text-center",
     ].join(" ")
   );
