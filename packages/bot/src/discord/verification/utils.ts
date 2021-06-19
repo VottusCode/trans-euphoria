@@ -1,3 +1,4 @@
+import { findGuild } from "db/guild";
 import { Guild, User } from "discord.js";
 import { ChannelNotFoundException } from "../../exceptions/ChannelNotFoundException";
 import { RoleNotFoundException } from "../../exceptions/RoleNotFoundException";
@@ -11,24 +12,22 @@ import { Env, env } from "../../utils/env";
  * @returns The channel.
  */
 export const createVerifyChannel = async (guild: Guild, user: User) => {
-  const adminVerifyRoleId = env(Env.ADMIN_VERIFY_ROLE_ID);
+  const dbGuild = await findGuild(guild);
 
   const adminVerifyRole = await (
     await guild.roles.fetch()
-  ).find((r) => r.id === adminVerifyRoleId);
+  ).find((r) => r.id === dbGuild.verifyRoleId);
 
   if (!adminVerifyRole) {
-    throw new RoleNotFoundException(adminVerifyRoleId);
+    throw new RoleNotFoundException(dbGuild.verifyRoleId);
   }
 
-  const verifyCategoryId = env(Env.VERIFY_CATEGORY_ID);
-
   const verifyCategory = (await guild.channels.fetch()).find(
-    (c) => c.type === "category" && c.id === verifyCategoryId
+    (c) => c.type === "category" && c.id === dbGuild.verifiedCategoryId
   );
 
   if (!verifyCategory) {
-    throw new ChannelNotFoundException(verifyCategoryId);
+    throw new ChannelNotFoundException(dbGuild.verifiedCategoryId);
   }
 
   return await guild.channels.create(`verify-${user.username}`, {

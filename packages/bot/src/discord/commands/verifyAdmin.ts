@@ -2,14 +2,15 @@ import { VerificationState } from "@prisma/client";
 import { service } from "../../utils/container";
 import { bootstrapEmbed, EmbedColor } from "../../utils/embeds";
 import { env, Env } from "../../utils/env";
-import { createCommand } from "../constructors";
+import { createCommand } from "discord/utils/constructors";
+import { isAdmin } from "discord/commandUtils/middleware/admin";
+import { findGuild } from "db/guild";
 
 export default createCommand(
   "verifyAdmin",
   {
     permissions: {
-      roles: ["853889737890201652"],
-      every: true,
+      verify: isAdmin,
     },
     bots: false,
   },
@@ -27,21 +28,21 @@ export default createCommand(
 
     const verifiedUser = await db.user.findFirst({
       where: {
-        verification: {
-          channelId: message.channel.id,
+        verifications: {
+          every: {
+            channelId: message.channel.id,
+            state: VerificationState.Verifying,
+            guildId: message.guild.id,
+          },
         },
       },
       include: {
-        verification: true,
+        verifications: true,
       },
     });
 
     if (!verifiedUser) {
       return await message.reply("this channel is not a verification channel.");
-    }
-
-    if (verifiedUser.verification.state !== VerificationState.Verifying) {
-      return await message.reply("this user is not currently being verified.");
     }
 
     const discordUser = (await message.guild.members.fetch()).find(
@@ -60,7 +61,7 @@ export default createCommand(
 
     await db.verification.update({
       where: {
-        id: verifiedUser.verification.id,
+        id: verifiedUser.verifications[0].id,
       },
       data: {
         state: newState,
@@ -78,7 +79,13 @@ export default createCommand(
           .setColor(EmbedColor.GREEN)
       );
 
-      await discordUser.roles.remove(env(Env.ROLE_UNVERIFIED_ROLE_ID));
+      await discordUser.roles.remove(
+        await discordUser.guild.roles.fetch(
+          await (
+            await findGuild(message.guild)
+          ).unverifiedRoleId
+        )
+      );
     }
 
     if (action === "deny" || action === "ban") {

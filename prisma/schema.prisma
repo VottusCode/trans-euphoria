@@ -33,29 +33,44 @@ enum VerificationState {
   Approved // Approved
 }
 
+model Guild {
+  // The guild id
+  id            String         @id
+  // The guild name
+  name          String
+  // Relationships
+  users         User[]
+  verifications Verification[]
+  // Settings
+  unverifiedRoleId String?
+  verifyRoleId String?
+  verifiedCategoryId String?
+
+  @@map("te_guilds")
+}
+
 model User {
   // The unique id for the user, it differs from the Discord id,
   // that's `discordId`.
-  id              String         @id @default(cuid())
+  id             String         @id @default(cuid())
   // The username, by default it's the discord username.
-  username        String
-  // The guild id
-  guildId         String
+  username       String
   // Pronouns - they're in the they/them/their/theirs format,
   // serialized as [they, them, their, theirs].
-  pronouns        String         @default("they/them/their/theirs")
+  pronouns       String         @default("they/them/their/theirs")
   // About
-  about           String?
+  about          String?
   // Sexuality
-  sexuality       Sexuality      @default(Other)
+  sexuality      Sexuality      @default(Other)
   // Gender
-  gender          Gender         @default(Other)
-  // Verification
-  verification    Verification   @relation(fields: [verificationId], references: [id])
-  verificationId  String
+  gender         Gender         @default(Other)
+  // Verifications
+  verifications  Verification[]
   // Discord account
   discordAccount DiscordAccount @relation(fields: [discordId], references: [id])
-  discordId       String         @unique
+  discordId      String         @unique
+  // Guilds the user is in
+  guilds         Guild[]
 
   @@map("te_users")
 }
@@ -78,7 +93,8 @@ model DiscordAccount {
 model Verification {
   id        String            @id @default(cuid())
   // The user being verified.
-  user      User?
+  user      User?             @relation(fields: [userId], references: [id])
+  userId    String?
   // Verification answer
   answer    String?
   // Verification State
@@ -86,6 +102,9 @@ model Verification {
   // Discord Channel Id - required for non-closed verifications,
   // if the bot were to restart, it needs to re-hook it's listeners.
   channelId String?
+  // The guild you're being verified on
+  guild     Guild             @relation(fields: [guildId], references: [id])
+  guildId   String
 
   @@map("te_user_verification")
 }

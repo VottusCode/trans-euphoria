@@ -1,14 +1,6 @@
-import {
-  Guild,
-  GuildMember,
-  Message,
-  StringResolvable,
-  TextChannel,
-  User as DiscordUser,
-} from "discord.js";
+import { GuildMember, Message, TextChannel } from "discord.js";
 import { User, Verification, VerificationState } from "@prisma/client";
 import { services } from "../../utils/container";
-import { Env, env } from "../../utils/env";
 import { bootstrapEmbed, EmbedColor, field } from "../../utils/embeds";
 import { createVerifyChannel } from "./utils";
 
@@ -19,11 +11,12 @@ import { createVerifyChannel } from "./utils";
  **/
 
 interface StartVerificationOptions {
-  user: User & { verification: Verification };
+  user: User;
   // At bot restart, all verify channels need to be rehooked
   rehook?: boolean;
   verifyChannel?: TextChannel;
   member: GuildMember;
+  verification: Verification;
 }
 
 /**
@@ -36,6 +29,7 @@ export const startVerification = async ({
   user,
   rehook = false,
   verifyChannel,
+  verification,
 }: StartVerificationOptions) => {
   const { bot, db } = services();
 
@@ -44,21 +38,15 @@ export const startVerification = async ({
     : await createVerifyChannel(member.guild, member.user);
 
   // Update the user state
-  user = await db.user.update({
+  verification = await db.verification.update({
     where: {
-      id: user.id,
+      id: verification.id,
     },
     data: {
-      verification: {
-        update: {
-          state: VerificationState.Verifying,
-          channelId: verifyChannel.id,
-          answer: null,
-        },
-      },
-    },
-    include: {
-      verification: true,
+      state: VerificationState.Verifying,
+      channelId: verifyChannel.id,
+      guildId: member.guild.id,
+      answer: null,
     },
   });
 
@@ -106,21 +94,14 @@ export const startVerification = async ({
     blocking = true;
 
     // Run only if the answer wasn't sent already.
-    if (!user.verification.answer) {
+    if (!verification.answer) {
       // Save the answer
-      user = await db.user.update({
+      verification = await db.verification.update({
         where: {
-          id: user.id,
+          id: verification.id,
         },
         data: {
-          verification: {
-            update: {
-              answer: message.content,
-            },
-          },
-        },
-        include: {
-          verification: true,
+          answer: message.content,
         },
       });
 

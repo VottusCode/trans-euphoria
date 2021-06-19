@@ -29,8 +29,7 @@ export interface Command {
   name: string;
   aliases: string[];
   permissions?: {
-    roles: Snowflake[];
-    every?: boolean;
+    verify: (context: CommandContext) => Promise<boolean>;
     failMessage?: (context: CommandContext) => StringResolvable;
   };
   // default: false

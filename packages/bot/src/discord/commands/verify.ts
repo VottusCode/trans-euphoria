@@ -1,17 +1,43 @@
 import { VerificationState } from "@prisma/client";
 import { startVerification } from "../verification/start";
-import { services } from "../../utils/container";
-import { createCommand } from "../constructors";
-import { Env, env } from "../../utils/env";
+import { service, services } from "../../utils/container";
+import { createCommand } from "discord/utils/constructors";
+import { Env, env, ver } from "../../utils/env";
+import { createUserVerification } from "db/user";
 
 export default createCommand(
   "verify",
   {
     permissions: {
-      roles: [env(Env.ROLE_UNVERIFIED_ROLE_ID)],
-      every: true,
+      verify: async (ctx) => {
+        const user = await service("db").user.findUnique({
+          where: {
+            discordId: ctx.message.author.id,
+          },
+          include: {
+            verifications: {
+              where: {
+                guildId: ctx.message.guild.id,
+              },
+            },
+          },
+        });
+
+        if (!user) return false;
+
+        const verification = user.verifications[0];
+
+        if (
+          [VerificationState.Approved, VerificationState.Verifying].includes(
+            verification.state as any
+          )
+        )
+          return false;
+
+        return true;
+      },
       failMessage: ({ message }) =>
-        `${message.author.username}, you are already verified.`,
+        `${message.author.username}, you are already verified/being verified.`,
     },
     bots: false,
     rateLimit: 1 * 60 * 1000,
@@ -21,12 +47,16 @@ export default createCommand(
 
     // TODO: caching
 
-    const user = await db.user.findUnique({
+    let user = await db.user.findUnique({
       where: {
         discordId: message.author.id,
       },
       include: {
-        verification: true,
+        verifications: {
+          where: {
+            guildId: message.guild.id,
+          },
+        },
       },
     });
 
@@ -35,20 +65,26 @@ export default createCommand(
       return await message.reply("an internal error has occurred.");
     }
 
+    if (user.verifications.length < 1) {
+      user = await createUserVerification(user, message.guild);
+    }
+
+    const verification = user.verifications[0];
+
     // Check if the state is not Preverify, if the user is already verifying or is banned,
     // send them a notice. Other states are allowed (PreVerify, Denied - they can reapply.)
-    if (user.verification.state !== VerificationState.PreVerify) {
-      if (user.verification.state === VerificationState.Approved) {
+    if (verification.state !== VerificationState.PreVerify) {
+      if (verification.state === VerificationState.Approved) {
         return await message.reply("you have already been verified!");
       }
 
-      if (user.verification.state === VerificationState.Verifying) {
+      if (verification.state === VerificationState.Verifying) {
         return await message.reply(
           "you are already being verified. Please check the channel that's been created for you."
         );
       }
 
-      if (user.verification.state === VerificationState.Denied_Permanent) {
+      if (verification.state === VerificationState.Denied_Permanent) {
         return await message.reply(
           "you are unable to verify again. Please contact staff for more details."
         );
@@ -58,6 +94,7 @@ export default createCommand(
     startVerification({
       member: message.member,
       user,
+      verification,
       rehook: false,
     });
   }

@@ -4,8 +4,8 @@
   "author": "Mia <vottus@vott.us>",
   "version": "1.0.0",
   "scripts": {
-    "dev": "vite",
-    "watch": "yarn build --watch",
+    "dev": "NODE_ENV=development vite",
+    "watch": "NODE_ENV=development yarn build --watch",
     "serve": "vite preview",
     "build": "vite build"
   },

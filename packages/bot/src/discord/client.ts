@@ -1,14 +1,16 @@
-import { PrismaClient } from "@prisma/client";
-import { bold, cyanBright, green, greenBright, yellow } from "chalk";
+import { bold, cyanBright, greenBright, yellow } from "chalk";
+import { createAccount, findAccount, syncAccount } from "db/account";
 import { Client } from "discord.js-light";
 import { sync as glob } from "glob";
 import path from "path";
 import { Logger } from "winston";
-import { Command, Event } from "../types";
-import { service, services } from "../utils/container";
-import { Env, env } from "../utils/env";
-import { inviteUrl } from "../utils/invite";
-import { rehookVerification } from "./verification/rehook";
+import { Command, Event } from "types";
+import { service, services } from "utils/container";
+import { Env, env } from "utils/env";
+import { inviteUrl } from "utils/invite";
+import { rehookVerification } from "discord/verification/rehook";
+import { createGuild, findGuild } from "db/guild";
+import { createUserVerification } from "db/user";
 
 // Event overrides:
 // ready -> euphoriaReady
@@ -36,7 +38,7 @@ export class EuphoriaClient extends Client {
         )
       );
 
-      await this.syncUsers();
+      await this.syncWithDatabase();
       await rehookVerification();
       await this.loadCommands();
       await this.loadEvents();
@@ -56,11 +58,11 @@ export class EuphoriaClient extends Client {
     await this.login(this._token);
   }
 
-  private async syncUsers() {
+  private async syncWithDatabase() {
     const db = service("db");
 
     this.logger.info("");
-    this.logger.info("Syncing users, this may take a while.");
+    this.logger.info("Syncing guilds & users, this may take a while.");
 
     const guilds = await (await this.guilds.fetch()).array();
 
@@ -68,6 +70,12 @@ export class EuphoriaClient extends Client {
     let memberCount = 0;
 
     for (const guild of guilds) {
+      let dbGuild = await findGuild(guild);
+
+      if (!dbGuild) {
+        dbGuild = await createGuild(guild);
+      }
+
       const members = await (await guild.members.fetch()).array();
 
       // Increments the memberCount for the debug output
@@ -77,47 +85,16 @@ export class EuphoriaClient extends Client {
         // Skip bots...
         if (member.user.bot) continue;
 
-        const account = await db.discordAccount.findUnique({
-          where: {
-            id: member.user.id,
-          },
-        });
+        let account = await findAccount(member);
 
         // If use doesn't exist, create a new one.
         if (!account) {
-          // TODO: move user creation somewhere else
-          await db.discordAccount.create({
-            data: {
-              id: member.user.id,
-              username: member.user.username,
-              discriminator: member.user.discriminator,
-              avatarId: member.user.avatar,
-              user: {
-                create: {
-                  username: member.user.username,
-                  guildId: guild.id,
-                  verification: {
-                    create: {
-                      answer: null,
-                    },
-                  },
-                },
-              },
-            },
-          });
+          account = await createAccount(member);
           continue;
         }
 
-        await db.discordAccount.update({
-          where: {
-            id: member.user.id,
-          },
-          data: {
-            username: member.user.username,
-            discriminator: member.user.discriminator,
-            avatarId: member.user.avatar,
-          },
-        });
+        // Sync account with current data
+        await syncAccount(member);
       }
     }
 

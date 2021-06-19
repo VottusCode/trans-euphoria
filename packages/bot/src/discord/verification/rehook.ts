@@ -11,51 +11,58 @@ export const rehookVerification = async () => {
   // however only those without a filled out answer.
   const users = await db.user.findMany({
     where: {
-      verification: {
-        state: VerificationState.Verifying,
-        answer: null,
+      verifications: {
+        every: {
+          state: VerificationState.Verifying,
+          answer: null,
+        },
       },
     },
     include: {
-      verification: true,
+      verifications: true,
     },
   });
 
   for (const user of users) {
-    const guild = (await bot.guilds.fetch()).find((g) => g.id === user.guildId);
+    for (const verification of user.verifications) {
+      const guild = (await bot.guilds.fetch()).find(
+        (g) => g.id === verification.guildId
+      );
 
-    // The user comes from a guild that the bot is no longer on, ignore.
-    if (!guild) continue;
+      // The user comes from a guild that the bot is no longer on, ignore.
+      if (!guild) continue;
 
-    const member = (await guild.members.fetch()).find(
-      (m) => m.id === user.discordId
-    );
+      const member = (await guild.members.fetch()).find(
+        (m) => m.id === user.discordId
+      );
 
-    // The user has already let the guild, ignore.
-    if (!member) continue;
+      // The user has already let the guild, ignore.
+      if (!member) continue;
 
-    // If the verify channel is specified, find it in the guild's channels,
-    // otherwise return null
-    let verifyChannel = user.verification.channelId
-      ? (await guild.channels.fetch()).find(
-          (c) => c.id === user.verification.channelId
-        )
-      : null;
+      // If the verify channel is specified, find it in the guild's channels,
+      // otherwise return null
+      let verifyChannel = verification.channelId
+        ? (await guild.channels.fetch()).find(
+            (c) => c.id === verification.channelId
+          )
+        : null;
 
-    // Create a new verify channel if it doesn't exist yet or
-    // if the specified channel is not a text channel.
-    if (!verifyChannel || !verifyChannel.isText()) {
-      verifyChannel = await createVerifyChannel(guild, member.user);
+      // Create a new verify channel if it doesn't exist yet or
+      // if the specified channel is not a text channel.
+      if (!verifyChannel || !verifyChannel.isText()) {
+        verifyChannel = await createVerifyChannel(guild, member.user);
+      }
+
+      // Call the startVerification function, however also pass rehook
+      // to indicate that the verification has already started, only the listener
+      // needs to be rehooked.
+      startVerification({
+        verifyChannel: verifyChannel as TextChannel,
+        member,
+        user,
+        verification,
+        rehook: true,
+      });
     }
-
-    // Call the startVerification function, however also pass rehook
-    // to indicate that the verification has already started, only the listener
-    // needs to be rehooked.
-    startVerification({
-      verifyChannel: verifyChannel as TextChannel,
-      member,
-      user,
-      rehook: true,
-    });
   }
 };

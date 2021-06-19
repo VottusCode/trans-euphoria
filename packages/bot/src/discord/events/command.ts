@@ -1,6 +1,6 @@
 import { Env, env } from "../../utils/env";
 import { services } from "../../utils/container";
-import { createEvent } from "../constructors";
+import { createEvent } from "discord/utils/constructors";
 import { CommandContext } from "../../types";
 import { noPermEmbed } from "../../utils/embeds";
 
@@ -38,14 +38,7 @@ export default createEvent("message", async (message) => {
 
     // If the command requires permissions, check for them.
     if (command.permissions) {
-      const roleCache = message.member.roles.cache.array();
-
-      // Whether the users needs all roles in the `permissions.roles` array
-      // is determined by `permissions.every`.
-      // This is not the best way of handling it, maybe find something beter.
-      const can = command.permissions.roles[
-        command.permissions.every ? "every" : "some"
-      ]((id) => roleCache.some((r) => r.id === id));
+      const can = await command.permissions.verify(ctx);
 
       // Send a fail message
       if (!can) {
