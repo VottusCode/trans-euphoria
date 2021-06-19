@@ -1,6 +1,6 @@
 import { bold, cyanBright, greenBright, yellow } from "chalk";
 import { createAccount, findAccount, syncAccount } from "db/account";
-import { Client } from "discord.js-light";
+import { Client, Guild, GuildMember } from "discord.js-light";
 import { sync as glob } from "glob";
 import path from "path";
 import { Logger } from "winston";
@@ -59,55 +59,46 @@ export class EuphoriaClient extends Client {
   }
 
   private async syncWithDatabase() {
-    const db = service("db");
-
     this.logger.info("");
     this.logger.info("Syncing guilds & users, this may take a while.");
 
     const guilds = await (await this.guilds.fetch()).array();
 
-    // it looks nice... i had to
-    let memberCount = 0;
-
     for (const guild of guilds) {
-      let dbGuild = await findGuild(guild);
-
-      if (!dbGuild) {
-        dbGuild = await createGuild(guild);
-      }
-
-      const members = await (await guild.members.fetch()).array();
-
-      // Increments the memberCount for the debug output
-      memberCount = memberCount + members.length;
-
-      for (const member of members) {
-        // Skip bots...
-        if (member.user.bot) continue;
-
-        let account = await findAccount(member);
-
-        // If use doesn't exist, create a new one.
-        if (!account) {
-          account = await createAccount(member);
-          continue;
-        }
-
-        // Sync account with current data
-        await syncAccount(member);
-      }
+      await this.syncGuild(guild);
     }
 
-    this.logger.info(
-      greenBright(
-        `Synced ${bold(memberCount)} user(s) across ${bold(
-          guilds.length
-        )} guild(s)`
-      )
-    );
     this.logger.info("");
+  }
 
-    // todo
+  async syncGuild(guild: Guild) {
+    let dbGuild = await findGuild(guild);
+
+    if (!dbGuild) {
+      dbGuild = await createGuild(guild);
+    }
+
+    const members = await (await guild.members.fetch()).array();
+
+    for (const member of members) {
+      await this.syncMember(member);
+    }
+  }
+
+  async syncMember(member: GuildMember) {
+    // Skip bots...
+    if (member.user.bot) return;
+
+    let account = await findAccount(member);
+
+    // If use doesn't exist, create a new one.
+    if (!account) {
+      account = await createAccount(member);
+      return;
+    }
+
+    // Sync account with current data
+    await syncAccount(member);
   }
 
   private async loadEvents() {
