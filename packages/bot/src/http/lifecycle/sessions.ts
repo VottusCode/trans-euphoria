@@ -10,74 +10,75 @@ import {
   UnauthorizedException,
 } from "@fasteerjs/exceptions";
 
-export const sessions = (cookieSecretPath: string) => async (
-  server: FasteerInstance
-) => {
-  server.fastify.register(fastifySecureSession, {
-    key: getSecret(cookieSecretPath),
-    cookieName: "_euphoria_session",
-    cookie: {
-      // todo: enabled based on https
-      sameSite: false,
-      path: "/",
-    },
-  });
-
-  server.fastify.register(fastifyPassport.initialize());
-  server.fastify.register(fastifyPassport.secureSession());
-
-  const db = service("db");
-
-  fastifyPassport.use(
-    "discord",
-    new DiscordStrategy(
-      {
-        clientID: env(Env.CLIENT_ID),
-        clientSecret: env(Env.CLIENT_SECRET),
-        callbackURL: env(Env.WEB_CALLBACK_URL),
-        scope: ["identify"],
+export const sessions =
+  (cookieSecretPath: string) => async (server: FasteerInstance) => {
+    server.fastify.register(fastifySecureSession, {
+      key: getSecret(cookieSecretPath),
+      cookieName: "_euphoria_session",
+      cookie: {
+        // todo: enabled based on https
+        sameSite: false,
+        path: "/",
       },
-      // We only use the discord strategy for authenticating once.
-      async (_, __, profile, done) => {
-        let account = await db.discordAccount.findFirst({
-          where: {
-            id: profile.id,
-          },
-          include: {
-            user: true,
-          },
-        });
+    });
 
-        if (!account || !account.user) {
-          return done(
-            new UnauthorizedException("This discord account is not registered.")
-          );
+    server.fastify.register(fastifyPassport.initialize());
+    server.fastify.register(fastifyPassport.secureSession());
+
+    const db = service("db");
+
+    fastifyPassport.use(
+      "discord",
+      new DiscordStrategy(
+        {
+          clientID: env(Env.CLIENT_ID),
+          clientSecret: env(Env.CLIENT_SECRET),
+          callbackURL: `${env(Env.BASE_URL)}/dashboard/login`,
+          scope: ["identify"],
+        },
+        // We only use the discord strategy for authenticating once.
+        async (_, __, profile, done) => {
+          let account = await db.discordAccount.findFirst({
+            where: {
+              id: profile.id,
+            },
+            include: {
+              user: true,
+            },
+          });
+
+          if (!account || !account.user) {
+            return done(
+              new UnauthorizedException(
+                "This discord account is not registered."
+              )
+            );
+          }
+
+          account = await db.discordAccount.update({
+            where: {
+              id: profile.id,
+            },
+            data: {
+              username: profile.username,
+              discriminator: profile.discriminator,
+              avatarId: profile.avatar,
+            },
+            include: {
+              user: true,
+            },
+          });
+
+          done(null, account);
         }
+      )
+    );
 
-        account = await db.discordAccount.update({
-          where: {
-            id: profile.id,
-          },
-          data: {
-            username: profile.username,
-            discriminator: profile.discriminator,
-            avatarId: profile.avatar,
-          },
-          include: {
-            user: true,
-          },
-        });
+    server.fastify.setErrorHandler(createExceptionHandler({}));
 
-        done(null, account);
-      }
-    )
-  );
+    fastifyPassport.registerUserSerializer(async (user: any) => user.id);
 
-  server.fastify.setErrorHandler(createExceptionHandler({}));
-
-  fastifyPassport.registerUserSerializer(async (user: any) => user.id);
-
-  fastifyPassport.registerUserDeserializer(
-    async (id: string) => await db.user.findUnique({ where: { id } })
-  );
-};
+    fastifyPassport.registerUserDeserializer(
+      async (id: string) => await db.user.findUnique({ where: { id } })
+    );
+  };

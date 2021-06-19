@@ -1,6 +1,7 @@
 import { createCommand } from "discord/utils/constructors";
 import { service } from "utils/container";
 import { bootstrapEmbed, field } from "utils/embeds";
+import { Env, env } from "utils/env";
 
 export default createCommand("profile", {}, async ({ message }) => {
   const db = service("db");
@@ -22,6 +23,7 @@ export default createCommand("profile", {}, async ({ message }) => {
         field("Gender", user.gender, true),
         field("Pronouns", user.pronouns, true),
         field("Sexuality", user.sexuality, true),
+        field("Profile", `${env(Env.BASE_URL)}/profile/${user.id}`, true),
       ])
   );
 });
