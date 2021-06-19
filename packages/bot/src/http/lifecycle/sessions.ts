@@ -79,6 +79,10 @@ export const sessions =
     fastifyPassport.registerUserSerializer(async (user: any) => user.id);
 
     fastifyPassport.registerUserDeserializer(
-      async (id: string) => await db.user.findUnique({ where: { id } })
+      async (id: string) =>
+        await db.discordAccount.findUnique({
+          where: { id },
+          include: { user: true },
+        })
     );
   };

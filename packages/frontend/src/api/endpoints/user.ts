@@ -1,8 +1,9 @@
 import { $http } from "..";
+import { StoreAccount } from "../../store";
 import { SuccessOrErrorPartial, User } from "../types";
 
 export interface FetchMeData {
-  user: User;
+  account: StoreAccount;
 }
 
 export const fetchMe = async () =>

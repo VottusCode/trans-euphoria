@@ -16,7 +16,7 @@
               type="text"
               :class="baseClasses"
               class="mt-2 inline-flex"
-              v-model="state.name"
+              v-model="state.username"
             />
           </div>
         </div>
@@ -26,7 +26,7 @@
             <Listbox v-model="state.gender">
               <div class="relative mt-2">
                 <listbox-button>
-                  {{ state.gender.display }}
+                  {{ state.gender }}
                 </listbox-button>
                 <listbox-options>
                   <listbox-option-list :list="genders" />
@@ -39,7 +39,7 @@
             <Listbox v-model="state.pronouns">
               <div class="relative mt-2">
                 <listbox-button>
-                  {{ state.pronouns.display }}
+                  {{ state.pronouns }}
                 </listbox-button>
                 <listbox-options>
                   <listbox-option-list :list="pronouns" />
@@ -53,7 +53,7 @@
               <Listbox v-model="state.sex">
                 <div class="relative mt-2">
                   <listbox-button>
-                    {{ state.sex.display }}
+                    {{ state.sexuality }}
                   </listbox-button>
                   <listbox-options>
                     <listbox-option-list :list="sexes" />
@@ -93,7 +93,7 @@ import MainTitle from "../../components/elements/MainTitle.vue";
 import ListboxButton from "../../components/elements/listbox/ListboxButton.vue";
 import ListboxOptions from "../../components/elements/listbox/ListboxOptions.vue";
 import ListboxOptionList from "../../components/elements/listbox/ListboxOptionList.vue";
-import { oldStore as store } from "../../store";
+import { store } from "../../store";
 import { genders, pronouns, sexes } from "../../profile";
 import Header from "../../components/layout/Header.vue";
 
@@ -113,14 +113,14 @@ export default defineComponent({
   setup() {
     // the current state.
     // shallow-copies the global state as default value
-    const state = reactive({ ...store.user });
+    const state = reactive({ ...store.account.user });
 
     // Is changing the state disabled?
     // Toggled during saving.
     const changeDisabled = ref(false);
 
     const hasStateChanged = () =>
-      Object.keys(state).some((k) => state[k] !== store.user[k]);
+      Object.keys(state).some((k) => state[k] !== store.account.user[k]);
 
     const sendForm = async () => {
       if (changeDisabled.value) return;
@@ -130,7 +130,7 @@ export default defineComponent({
 
       // save changes to the copy
       for (const k in state) {
-        store.user[k] = state[k];
+        store.account.user[k] = state[k];
       }
 
       changeDisabled.value = false;

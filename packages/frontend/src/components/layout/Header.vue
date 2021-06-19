@@ -3,9 +3,9 @@
     <div class="flex items-center w-full">
       <main-title class="text-xl" />
     </div>
-    <div class="flex items-center justify-end w-full" v-if="store.user">
-      <div class="flex flex-col items-end mr-6">
-        <p>{{ store.user.username }}</p>
+    <div class="flex items-center justify-end w-full" v-if="store.account">
+      <div class="flex flex-col items-end mr-6 w-full">
+        <p>{{ store.account.username }}</p>
         <div
           @click="logout"
           class="
@@ -22,8 +22,11 @@
           Log out
         </div>
       </div>
-      <div>
-        <img :src="store.user.img" class="w-16 h-16 rounded-full" />
+      <div class="w-full">
+        <img
+          :src="`https://cdn.discordapp.com/avatars/${store.account.id}/${store.account.avatarId}`"
+          class="w-16 h-16 rounded-full"
+        />
       </div>
     </div>
   </div>
@@ -43,7 +46,7 @@ export default defineComponent({
 
     const logout = async () => {
       await apiLogout();
-      store.user = null;
+      store.account = null;
       router.push("/");
     };
 

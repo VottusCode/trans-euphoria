@@ -8,7 +8,7 @@ const UserController: Controller = async (app, { db }) => {
       success: true,
       data: {
         // TODO: transform
-        user: {
+        account: {
           ...req.user,
           guildId: undefined,
           verificationId: undefined,
