@@ -4,14 +4,7 @@ import { services } from "../../utils/container";
 import { bootstrapEmbed, EmbedColor, field } from "../../utils/embeds";
 import { createVerifyChannel } from "./utils";
 
-/**
- * Please excuse this mess of a code that you will read,
- * it was written late at night, I am aware of how trashy it is,
- * I may rewrite it soon.
- **/
-
 interface StartVerificationOptions {
-  user: User;
   // At bot restart, all verify channels need to be rehooked
   rehook?: boolean;
   verifyChannel?: TextChannel;
@@ -26,7 +19,6 @@ interface StartVerificationOptions {
  */
 export const startVerification = async ({
   member,
-  user,
   rehook = false,
   verifyChannel,
   verification,

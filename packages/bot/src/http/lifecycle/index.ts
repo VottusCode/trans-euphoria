@@ -16,12 +16,10 @@ export const lifecycle =
             kind: "user_input",
             message: "Not Found",
           },
-        }); // default handler
+        });
       }
 
       // Vue SPA
       res.status(200).sendFile("index.html");
     });
-
-    // TODO
   };

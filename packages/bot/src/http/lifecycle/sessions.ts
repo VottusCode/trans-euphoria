@@ -16,8 +16,8 @@ export const sessions =
       key: getSecret(cookieSecretPath),
       cookieName: "_euphoria_session",
       cookie: {
-        // todo: enabled based on https
-        sameSite: false,
+        secure: env(Env.BASE_URL).startsWith("https"),
+        sameSite: env(Env.BASE_URL).startsWith("https"),
         path: "/",
       },
     });

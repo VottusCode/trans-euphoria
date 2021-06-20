@@ -5,12 +5,11 @@ import { sync as glob } from "glob";
 import path from "path";
 import { Logger } from "winston";
 import { Command, Event } from "types";
-import { service, services } from "utils/container";
+import { services } from "utils/container";
 import { Env, env } from "utils/env";
 import { inviteUrl } from "utils/invite";
 import { rehookVerification } from "discord/verification/rehook";
 import { createGuild, findGuild } from "db/guild";
-import { createUserVerification } from "db/user";
 
 // Event overrides:
 // ready -> euphoriaReady

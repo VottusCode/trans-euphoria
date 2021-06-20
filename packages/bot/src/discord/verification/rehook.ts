@@ -25,16 +25,12 @@ export const rehookVerification = async () => {
 
   for (const user of users) {
     for (const verification of user.verifications) {
-      const guild = (await bot.guilds.fetch()).find(
-        (g) => g.id === verification.guildId
-      );
+      const guild = await bot.guilds.fetch(verification.guildId);
 
       // The user comes from a guild that the bot is no longer on, ignore.
       if (!guild) continue;
 
-      const member = (await guild.members.fetch()).find(
-        (m) => m.id === user.discordId
-      );
+      const member = await guild.members.fetch(user.discordId);
 
       // The user has already let the guild, ignore.
       if (!member) continue;
@@ -42,9 +38,7 @@ export const rehookVerification = async () => {
       // If the verify channel is specified, find it in the guild's channels,
       // otherwise return null
       let verifyChannel = verification.channelId
-        ? (await guild.channels.fetch()).find(
-            (c) => c.id === verification.channelId
-          )
+        ? await guild.channels.fetch(verification.channelId)
         : null;
 
       // Create a new verify channel if it doesn't exist yet or
@@ -59,7 +53,6 @@ export const rehookVerification = async () => {
       startVerification({
         verifyChannel: verifyChannel as TextChannel,
         member,
-        user,
         verification,
         rehook: true,
       });

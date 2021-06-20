@@ -7,7 +7,7 @@ const AuthController: Controller = async (app) => {
     "/authorize",
     { preValidation: fastifyPassport.authenticate("discord") },
     async (req, res) => {
-      req.session.set("userId", (req.user! as any).id);
+      req.session.set("userId", req.user.id);
 
       res.send({
         success: true,

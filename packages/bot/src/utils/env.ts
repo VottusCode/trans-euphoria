@@ -15,10 +15,10 @@ export enum Env {
   // The bot prefix
   BOT_PREFIX = "BOT_PREFIX",
   // The role for unverified users
-  ROLE_UNVERIFIED_ROLE_ID = "ROLE_UNVERIFIED_ROLE_ID",
+  // ROLE_UNVERIFIED_ROLE_ID = "ROLE_UNVERIFIED_ROLE_ID",
   // The role for users that are able to verify others
-  ADMIN_VERIFY_ROLE_ID = "ADMIN_VERIFY_ROLE_ID",
-  VERIFY_CATEGORY_ID = "VERIFY_CATEGORY_ID",
+  // ADMIN_VERIFY_ROLE_ID = "ADMIN_VERIFY_ROLE_ID",
+  // VERIFY_CATEGORY_ID = "VERIFY_CATEGORY_ID",
   CORS = "CORS",
   PORT = "PORT",
   HOST = "HOST",

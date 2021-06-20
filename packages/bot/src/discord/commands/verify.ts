@@ -2,7 +2,6 @@ import { VerificationState } from "@prisma/client";
 import { startVerification } from "../verification/start";
 import { service, services } from "../../utils/container";
 import { createCommand } from "discord/utils/constructors";
-import { Env, env, ver } from "../../utils/env";
 import { createUserVerification } from "db/user";
 
 export default createCommand(
@@ -23,20 +22,13 @@ export default createCommand(
           },
         });
 
+        // User doesn't exist. WHA?
         if (!user) return false;
 
+        // User does not have a verification on this guild yet, create one.
         if (user.verifications.length < 1) {
           user = await createUserVerification(user, ctx.message.guild);
         }
-
-        const verification = user.verifications[0];
-
-        if (
-          [VerificationState.Approved, VerificationState.Verifying].includes(
-            verification.state as any
-          )
-        )
-          return false;
 
         return true;
       },
@@ -48,8 +40,6 @@ export default createCommand(
   },
   async ({ message }) => {
     const { db } = services();
-
-    // TODO: caching
 
     let user = await db.user.findUnique({
       where: {
@@ -63,15 +53,6 @@ export default createCommand(
         },
       },
     });
-
-    if (!user) {
-      // TODO: Create user if doesn't exist.
-      return await message.reply("an internal error has occurred.");
-    }
-
-    if (user.verifications.length < 1) {
-      user = await createUserVerification(user, message.guild);
-    }
 
     const verification = user.verifications[0];
 

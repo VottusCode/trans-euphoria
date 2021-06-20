@@ -1,7 +1,6 @@
 import { VerificationState } from "@prisma/client";
 import { service } from "../../utils/container";
 import { bootstrapEmbed, EmbedColor } from "../../utils/embeds";
-import { env, Env } from "../../utils/env";
 import { createCommand } from "discord/utils/constructors";
 import { isAdmin } from "discord/commandUtils/middleware/admin";
 import { findGuild } from "db/guild";
@@ -17,14 +16,14 @@ export default createCommand(
   async ({ message, args: [action], prefix }) => {
     const db = service("db");
 
-    if (!action || !["approve", "deny", "ban"].includes(action.toLowerCase())) {
+    // Lowercase the action for case-insentivity
+    action = action.toLowerCase();
+
+    if (!action || !["approve", "deny", "ban"].includes(action)) {
       return await message.reply(
         `the correct usage is \`${prefix}verifyAdmin [approve/deny/ban]\``
       );
     }
-
-    // Lowercase the action for case-insentivity
-    action = action.toLowerCase();
 
     const verification = await db.verification.findFirst({
       where: {
@@ -41,8 +40,8 @@ export default createCommand(
       return await message.reply("this channel is not a verification channel.");
     }
 
-    const discordUser = (await message.guild.members.fetch()).find(
-      (g) => g.user.id === verification.user.discordId
+    const discordUser = await message.guild.members.fetch(
+      verification.user.discordId
     );
 
     if (!discordUser) {
@@ -77,8 +76,8 @@ export default createCommand(
 
       await discordUser.roles.add(
         await discordUser.guild.roles.fetch(
-          await (
-            await findGuild(message.guild)
+          (
+            await findGuild(discordUser.guild)
           ).unverifiedRoleId
         )
       );
