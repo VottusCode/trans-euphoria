@@ -10,7 +10,7 @@ export default createCommand(
   {
     permissions: {
       verify: async (ctx) => {
-        const user = await service("db").user.findUnique({
+        let user = await service("db").user.findUnique({
           where: {
             discordId: ctx.message.author.id,
           },
@@ -24,6 +24,10 @@ export default createCommand(
         });
 
         if (!user) return false;
+
+        if (user.verifications.length < 1) {
+          user = await createUserVerification(user, ctx.message.guild);
+        }
 
         const verification = user.verifications[0];
 

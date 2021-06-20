@@ -6,9 +6,11 @@ import { Env, env } from "utils/env";
 export default createCommand("profile", {}, async ({ message }) => {
   const db = service("db");
 
+  const mention = message.mentions.members.first();
+
   const user = await db.user.findUnique({
     where: {
-      discordId: message.author.id,
+      discordId: mention ? mention.user.id : message.author.id,
     },
   });
 
@@ -18,7 +20,7 @@ export default createCommand("profile", {}, async ({ message }) => {
     bootstrapEmbed()
       .setTitle(user.username)
       .setDescription(user.about ?? "")
-      .setThumbnail(message.author.avatarURL())
+      .setThumbnail((mention ? mention.user : message.author).avatarURL())
       .addFields([
         field("Gender", user.gender, true),
         field("Pronouns", user.pronouns, true),

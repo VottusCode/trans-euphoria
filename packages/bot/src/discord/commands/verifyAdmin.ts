@@ -26,27 +26,23 @@ export default createCommand(
     // Lowercase the action for case-insentivity
     action = action.toLowerCase();
 
-    const verifiedUser = await db.user.findFirst({
+    const verification = await db.verification.findFirst({
       where: {
-        verifications: {
-          every: {
-            channelId: message.channel.id,
-            state: VerificationState.Verifying,
-            guildId: message.guild.id,
-          },
-        },
+        channelId: message.channel.id,
+        state: VerificationState.Verifying,
+        guildId: message.guild.id,
       },
       include: {
-        verifications: true,
+        user: true,
       },
     });
 
-    if (!verifiedUser) {
+    if (!verification) {
       return await message.reply("this channel is not a verification channel.");
     }
 
     const discordUser = (await message.guild.members.fetch()).find(
-      (g) => g.user.id === verifiedUser.discordId
+      (g) => g.user.id === verification.user.discordId
     );
 
     if (!discordUser) {
@@ -61,7 +57,7 @@ export default createCommand(
 
     await db.verification.update({
       where: {
-        id: verifiedUser.verifications[0].id,
+        id: verification.id,
       },
       data: {
         state: newState,
@@ -79,7 +75,7 @@ export default createCommand(
           .setColor(EmbedColor.GREEN)
       );
 
-      await discordUser.roles.remove(
+      await discordUser.roles.add(
         await discordUser.guild.roles.fetch(
           await (
             await findGuild(message.guild)
