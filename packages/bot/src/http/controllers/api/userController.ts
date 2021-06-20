@@ -2,8 +2,46 @@ import { api } from "http/prefixes";
 import { Controller } from "types";
 import { auth } from "http/lifecycle/hooks";
 import s from "fluent-json-schema";
+import { NotFoundException } from "@fasteerjs/exceptions";
 
 const UserController: Controller = async (app, { db }) => {
+  app.get<{ Params: { id: string } }>(
+    "/:id",
+    {
+      schema: s
+        .object()
+        .prop("params", s.object().prop("id", s.string()))
+        .valueOf(),
+    },
+    async (req, res) => {
+      const user = await db.user.findUnique({
+        where: {
+          id: req.params.id,
+        },
+        include: {
+          discordAccount: true,
+        },
+      });
+
+      if (!user) throw new NotFoundException("User not found");
+
+      res.send({
+        success: true,
+        data: {
+          user: {
+            id: user.id,
+            name: user.username,
+            gender: user.gender,
+            pronouns: user.pronouns,
+            sexuality: user.sexuality,
+            about: user.about,
+            avatar: user.discordAccount.avatarId,
+            discordId: user.discordAccount.id,
+          },
+        },
+      });
+    }
+  );
   app.get("/me", { preHandler: auth }, async (req, res) => {
     res.send({
       success: true,
