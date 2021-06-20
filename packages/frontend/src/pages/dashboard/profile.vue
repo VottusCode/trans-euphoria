@@ -1,5 +1,5 @@
 <template>
-  <CardWrapper>
+  <CardWrapper class="relative">
     <Header />
 
     <div class="mb-8">
@@ -17,6 +17,7 @@
               :class="baseClasses"
               class="mt-2 inline-flex"
               v-model="state.username"
+              :disabled="changeDisabled"
             />
           </div>
         </div>
@@ -26,7 +27,7 @@
             <Listbox v-model="state.gender">
               <div class="relative mt-2">
                 <listbox-button>
-                  {{ state.gender }}
+                  {{ display(state.gender) }}
                 </listbox-button>
                 <listbox-options>
                   <listbox-option-list :list="genders" />
@@ -39,7 +40,7 @@
             <Listbox v-model="state.pronouns">
               <div class="relative mt-2">
                 <listbox-button>
-                  {{ state.pronouns }}
+                  {{ display(state.pronouns) }}
                 </listbox-button>
                 <listbox-options>
                   <listbox-option-list :list="pronouns" />
@@ -50,10 +51,10 @@
           <div class="flex flex-col w-full">
             <div>
               <label>Sexuality</label>
-              <Listbox v-model="state.sex">
+              <Listbox v-model="state.sexuality">
                 <div class="relative mt-2">
                   <listbox-button>
-                    {{ state.sexuality }}
+                    {{ display(state.sexuality) }}
                   </listbox-button>
                   <listbox-options>
                     <listbox-option-list :list="sexes" />
@@ -72,11 +73,29 @@
               placeholder="Introduce yourself in few short sentences..."
               class="mt-2 inline-flex"
               v-model="state.about"
+              :disabled="changeDisabled"
             />
           </div>
         </div>
         <div class="flex justify-end w-full">
-          <button :class="baseClasses">Save</button>
+          <button :class="baseClasses">
+            {{ changeDisabled ? "Saving..." : "Save" }}
+          </button>
+          <div
+            class="
+              absolute
+              w-full
+              h-full
+              bg-gray-100
+              opacity-75
+              z-50
+              inset-0
+              rounded-3xl
+            "
+            v-if="changeDisabled"
+          >
+            <spinner />
+          </div>
         </div>
       </form>
     </div>
@@ -93,9 +112,11 @@ import MainTitle from "../../components/elements/MainTitle.vue";
 import ListboxButton from "../../components/elements/listbox/ListboxButton.vue";
 import ListboxOptions from "../../components/elements/listbox/ListboxOptions.vue";
 import ListboxOptionList from "../../components/elements/listbox/ListboxOptionList.vue";
-import { store } from "../../store";
+import { clearAlerts, fail, ok, store } from "../../store";
 import { genders, pronouns, sexes } from "../../profile";
 import Header from "../../components/layout/Header.vue";
+import { updateMe } from "../../api/endpoints/user";
+import Spinner from "../../components/elements/Spinner.vue";
 
 export default defineComponent({
   components: {
@@ -109,10 +130,11 @@ export default defineComponent({
     MainTitle,
     ListboxOptionList,
     Header,
+    Spinner,
   },
   setup() {
     // the current state.
-    // shallow-copies the global state as default value
+    // shallow-copies the global state as default value and removes
     const state = reactive({ ...store.account.user });
 
     // Is changing the state disabled?
@@ -122,31 +144,50 @@ export default defineComponent({
     const hasStateChanged = () =>
       Object.keys(state).some((k) => state[k] !== store.account.user[k]);
 
+    const display = (str: { display: string } | string) =>
+      typeof str === "string" ? str : str.display;
+
     const sendForm = async () => {
       if (changeDisabled.value) return;
       if (!hasStateChanged()) return;
 
       changeDisabled.value = true;
 
+      // Clear alerts
+      clearAlerts();
+
       // save changes to the copy
       for (const k in state) {
-        store.account.user[k] = state[k];
+        store.account.user[k] = display(state[k]);
       }
 
-      changeDisabled.value = false;
+      try {
+        const res = await updateMe({
+          ...store.account.user,
+          discordId: undefined,
+          id: undefined,
+        });
 
-      // TODO
-      console.log("saved");
+        ok("Profile saved successfully.");
+      } catch {
+        fail("An error has occurred while saving your profile.");
+      }
+
+      setTimeout(clearAlerts, 1000);
+
+      changeDisabled.value = false;
     };
 
     return {
       sendForm,
       baseClasses,
+      changeDisabled,
       genders,
       pronouns,
       sexes,
       state,
       store,
+      display,
     };
   },
 });

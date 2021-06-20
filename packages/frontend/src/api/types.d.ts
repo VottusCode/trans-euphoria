@@ -16,9 +16,3 @@ export interface ErrorPartial {
 export type SuccessOrErrorPartial<TData extends object = object> =
   | SuccessPartial<TData>
   | ErrorPartial;
-
-export interface User {
-  id: string;
-  username: string;
-  discordId: string;
-}

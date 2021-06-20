@@ -20,6 +20,7 @@
     "fastify-passport": "^0.4.2",
     "fastify-secure-session": "^2.3.1",
     "fastify-static": "^4.2.2",
+    "fluent-json-schema": "^3.0.0",
     "liquidjs": "^9.25.0",
     "passport-discord": "^0.1.4",
     "passport-oauth2-refresh": "^2.0.2",

@@ -53,8 +53,8 @@ export interface CreateCommandOptions {
 
 export type Controller = Fasteer.FCtrl<FastifyInstance, {}, Container>;
 
-declare module "fastify-passport" {
-  export interface PassportUser extends User {
-    discordAccount: DiscordAccount;
+declare module "fastify" {
+  export interface PassportUser extends DiscordAccount {
+    user: User;
   }
 }

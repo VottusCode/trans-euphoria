@@ -104,24 +104,26 @@ export class EuphoriaClient extends Client {
   private async loadEvents() {
     const events = glob(path.join(__dirname, "events", "*.{ts,js}"));
 
-    for (const event of events) {
-      const evt: { default?: Event<any> } = await import(event);
+    for (const index in events) {
+      const evt: { default?: Event<any> } = await import(events[index]);
 
       if (!evt.default) {
         this.logger.warn(
           yellow(
             `Event ${bold(
-              path.parse(event)
+              path.parse(events[index])
             )} does not have a default export. Skipping`
           )
         );
+        events[index] = undefined;
+        continue;
       }
 
       this.on(evt.default.trigger, evt.default.run);
     }
 
     this.logger.info(
-      greenBright(`Registered ${this.commands.length} event listener(s)`)
+      greenBright(`Registered ${events.length} event listener(s)`)
     );
   }
 

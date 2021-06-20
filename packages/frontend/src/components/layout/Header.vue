@@ -30,6 +30,7 @@
       </div>
     </div>
   </div>
+  <alert-renderer class="mb-8" />
 </template>
 
 <script lang="ts">
@@ -38,9 +39,10 @@ import { store } from "../../store";
 import { logout as apiLogout } from "../../api/endpoints/auth";
 import { useRouter } from "vue-router";
 import MainTitle from "../elements/MainTitle.vue";
+import AlertRenderer from "../elements/alert/AlertRenderer.vue";
 
 export default defineComponent({
-  components: { MainTitle },
+  components: { MainTitle, AlertRenderer },
   setup() {
     const router = useRouter();
 

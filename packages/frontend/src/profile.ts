@@ -61,7 +61,10 @@ let pronouns: {
 ];
 
 // adding display without the need to type the pronouns out like an idiot
-pronouns = pronouns.map((p) => ({ ...p, display: p.list.join("/") }));
+pronouns = pronouns.map((p) => ({
+  ...p,
+  display: p.list.join("/"),
+}));
 
 const sexes = [
   {
