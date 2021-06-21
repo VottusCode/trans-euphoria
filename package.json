@@ -20,7 +20,7 @@
     "frontend": "yarn workspace @trans-euphoria/frontend",
     "prod": "yarn bot prod",
     "dev": "concurrently -k -n 'e:bot,e:vite' -c 'magenta.bold,cyan.bold' 'yarn bot dev' 'yarn frontend watch'",
-    "build": "yarn prisma migrate && yarn bot build && yarn frontend build",
+    "build": "yarn prisma generate && yarn bot build && yarn frontend build",
     "format": "prisma format && prettier --write packages/**/src/**/*.{ts,tsx,js,jsx,vue,html}"
   }
 }
