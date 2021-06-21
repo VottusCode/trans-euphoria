@@ -1,7 +1,7 @@
-import { createCommand } from "discord/utils/constructors";
-import { service } from "utils/container";
-import { bootstrapEmbed, field } from "utils/embeds";
-import { Env, env } from "utils/env";
+import { createCommand } from "../utils/constructors";
+import { service } from "../../utils/container";
+import { bootstrapEmbed, field } from "../utils/embeds";
+import { Env, env } from "../../utils/env";
 
 export default createCommand("profile", {}, async ({ message }) => {
   const db = service("db");

@@ -1,7 +1,7 @@
 import { GuildMember, Message, TextChannel } from "discord.js";
 import { User, Verification, VerificationState } from "@prisma/client";
 import { services } from "../../utils/container";
-import { bootstrapEmbed, EmbedColor, field } from "../../utils/embeds";
+import { bootstrapEmbed, EmbedColor, field } from "../utils/embeds";
 import { createVerifyChannel } from "./utils";
 
 interface StartVerificationOptions {

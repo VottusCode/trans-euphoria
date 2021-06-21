@@ -1,9 +1,9 @@
 import { VerificationState } from "@prisma/client";
 import { service } from "../../utils/container";
-import { bootstrapEmbed, EmbedColor } from "../../utils/embeds";
-import { createCommand } from "discord/utils/constructors";
-import { isAdmin } from "discord/commandUtils/middleware/admin";
-import { findGuild } from "db/guild";
+import { bootstrapEmbed, EmbedColor } from "../utils/embeds";
+import { createCommand } from "../../discord/utils/constructors";
+import { isAdmin } from "../../discord/commandUtils/middleware/admin";
+import { findGuild } from "../../db/guild";
 
 export default createCommand(
   "verifyAdmin",

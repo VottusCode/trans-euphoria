@@ -1,5 +1,5 @@
 import { GuildMember, Snowflake, User as DiscordUser } from "discord.js";
-import { service } from "utils/container";
+import { service } from "../../utils/container";
 
 export type UserResolvable = GuildMember | DiscordUser | Snowflake;
 

@@ -1,6 +1,6 @@
 import { EmbedField, MessageEmbed, StringResolvable } from "discord.js";
-import { service } from "./container";
-import { ver } from "./env";
+import { service } from "../../utils/container";
+import { ver } from "../../utils/env";
 
 export enum EmbedColor {
   PINK = "#ffc2cd",

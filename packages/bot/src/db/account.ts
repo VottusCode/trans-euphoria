@@ -1,5 +1,5 @@
-import { resolveUser, UserResolvable } from "discord/utils/users";
-import { service } from "utils/container";
+import { resolveUser, UserResolvable } from "../discord/utils/users";
+import { service } from "../utils/container";
 
 export const createAccount = async (userResolvable: UserResolvable) => {
   const db = service("db");

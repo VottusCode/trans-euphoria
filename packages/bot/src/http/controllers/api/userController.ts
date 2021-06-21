@@ -1,6 +1,6 @@
-import { api } from "http/prefixes";
-import { Controller } from "types";
-import { auth } from "http/lifecycle/hooks";
+import { api } from "../../prefixes";
+import { Controller } from "../../../types";
+import { auth } from "../../lifecycle/hooks";
 import s from "fluent-json-schema";
 import { NotFoundException } from "@fasteerjs/exceptions";
 

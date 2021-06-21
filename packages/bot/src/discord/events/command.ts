@@ -1,8 +1,8 @@
 import { Env, env } from "../../utils/env";
 import { services } from "../../utils/container";
-import { createEvent } from "discord/utils/constructors";
+import { createEvent } from "../utils/constructors";
 import { CommandContext } from "../../types";
-import { noPermEmbed } from "../../utils/embeds";
+import { noPermEmbed } from "../utils/embeds";
 
 export default createEvent("message", async (message) => {
   const { bot } = services();

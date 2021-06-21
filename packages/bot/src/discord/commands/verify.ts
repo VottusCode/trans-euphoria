@@ -1,8 +1,8 @@
 import { VerificationState } from "@prisma/client";
 import { startVerification } from "../verification/start";
 import { service, services } from "../../utils/container";
-import { createCommand } from "discord/utils/constructors";
-import { createUserVerification } from "db/user";
+import { createCommand } from "../utils/constructors";
+import { createUserVerification } from "../../db/user";
 
 export default createCommand(
   "verify",

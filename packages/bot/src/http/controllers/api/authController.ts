@@ -1,5 +1,5 @@
-import { api } from "http/prefixes";
-import { Controller } from "types";
+import { api } from "../../prefixes";
+import { Controller } from "../../../types";
 import fastifyPassport from "fastify-passport";
 
 const AuthController: Controller = async (app) => {

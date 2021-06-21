@@ -1,4 +1,4 @@
-import { findGuild } from "db/guild";
+import { findGuild } from "../../db/guild";
 import { Guild, User } from "discord.js";
 import { ChannelNotFoundException } from "../../exceptions/ChannelNotFoundException";
 import { RoleNotFoundException } from "../../exceptions/RoleNotFoundException";

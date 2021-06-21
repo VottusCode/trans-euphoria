@@ -1,15 +1,15 @@
 import { bold, cyanBright, greenBright, yellow } from "chalk";
-import { createAccount, findAccount, syncAccount } from "db/account";
+import { createAccount, findAccount, syncAccount } from "../db/account";
 import { Client, Guild, GuildMember } from "discord.js-light";
 import { sync as glob } from "glob";
 import path from "path";
 import { Logger } from "winston";
-import { Command, Event } from "types";
-import { services } from "utils/container";
-import { Env, env } from "utils/env";
-import { inviteUrl } from "utils/invite";
-import { rehookVerification } from "discord/verification/rehook";
-import { createGuild, findGuild } from "db/guild";
+import { Command, Event } from "../types";
+import { services } from "../utils/container";
+import { Env, env } from "../utils/env";
+import { inviteUrl } from "../utils/invite";
+import { rehookVerification } from "./verification/rehook";
+import { createGuild, findGuild } from "../db/guild";
 
 // Event overrides:
 // ready -> euphoriaReady

@@ -1,5 +1,5 @@
 import { Guild } from "discord.js";
-import { service } from "utils/container";
+import { service } from "../utils/container";
 
 export const createGuild = async (guild: Guild) =>
   service("db").guild.create({

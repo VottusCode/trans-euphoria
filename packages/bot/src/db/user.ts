@@ -1,8 +1,6 @@
 import { User } from ".prisma/client";
 import { Guild } from "discord.js";
-import { service } from "utils/container";
-
-export const createUser = async () => {};
+import { service } from "../utils/container";
 
 export const createUserVerification = async (
   user: User | string,

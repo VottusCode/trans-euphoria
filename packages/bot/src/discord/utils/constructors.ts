@@ -1,4 +1,4 @@
-import type { Command, CreateCommandOptions, Event } from "types";
+import type { Command, CreateCommandOptions, Event } from "../../types";
 import type { ClientEvents } from "discord.js";
 
 export const createCommand = (
