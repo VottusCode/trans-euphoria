@@ -78,7 +78,6 @@ export default createCommand(
 
     startVerification({
       member: message.member,
-      user,
       verification,
       rehook: false,
     });
