@@ -6,9 +6,9 @@ Node.js-powered Discord bot for the Trans Euphoria Discord Server
 
 | Type       |                      URL                      |
 | :--------- | :-------------------------------------------: |
-| Dev        |           https://euphoria.vott.us/           |
+| Dev        |   https://trans-euphoria-dev.herokuapp.com/   |
 | Staging    | https://trans-euphoria-staging.herokuapp.com/ |
-| Production |  https://trans-euphoria-prod.herokuapp.com/   |
+| Production |           https://euphoria.vott.us/           |
 
 ## Packages
 
@@ -18,10 +18,10 @@ Each package may have it's own README in it's root directory.
 Package is the relative path to the package in this repository.
 Distribution Name is a name of the package in a specific distribution system (Maven, NPM, ...)
 
-| Package                                |      Description       |    Distribution Name     |
-| :------------------------------------- | :--------------------: | :----------------------: |
-| [packages/bot](packages/bot)           | Discord bot + REST API |   @trans-euphoria/bot    |
-| [packages/frontend](packages/frontend) |    Vue web frontend    | @trans-euphoria/frontend |
+| Package                                |       Description       |    Distribution Name     |
+| :------------------------------------- | :---------------------: | :----------------------: |
+| [packages/bot](packages/bot)           | Discord bot + Webserver |   @trans-euphoria/bot    |
+| [packages/frontend](packages/frontend) |    Vue web frontend     | @trans-euphoria/frontend |
 
 ## License
 
