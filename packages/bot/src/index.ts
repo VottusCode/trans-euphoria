@@ -13,7 +13,7 @@ import { sessions } from "./http/lifecycle/sessions";
 
 // Path to all controllers.
 // prettier-ignore
-const CONTROLLERS_DIRECTORY = path.join(__dirname, "http", "controllers", "**", "*.ts");
+const CONTROLLERS_DIRECTORY = path.join(__dirname, "http", "controllers", "**", "*.{ts,js}");
 
 // Path to the cookie secret used to sign cookies.
 // i swear to fucking god im going to kill prettier someday
