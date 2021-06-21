@@ -6,7 +6,7 @@ Node.js-powered Discord bot for the Trans Euphoria Discord Server
 
 | Type       |                      URL                      |
 | :--------- | :-------------------------------------------: |
-| Dev        |   https://trans-euphoria-dev.herokuapp.com/   |
+| Dev        |           https://euphoria.vott.us/           |
 | Staging    | https://trans-euphoria-staging.herokuapp.com/ |
 | Production |  https://trans-euphoria-prod.herokuapp.com/   |
 
